@@ -62,6 +62,12 @@ public:
 template<typename ValType>
 TVector<ValType>::TVector(int size, int startIndex)
 {
+	if (size <= 0)
+		throw Exception("Not correct size of vector!");
+
+	if (startIndex < 0)
+		throw Exception("Not correct starting index of vector!");
+
 	elem - new ValType[size];
 	memset(elem, 0, size * sizeof(ValType));
 };
