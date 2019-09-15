@@ -6,7 +6,9 @@
 
 #include "exceptions.h"
 
-template<typename ValType>
+using namespace std;
+
+template<class ValType>
 class TVector
 {
 protected:
@@ -15,15 +17,17 @@ protected:
 	int startIndex;
 
 public:
-	TVector(int size = 10, int startIndex = 0);
+	TVector(int _size = 10, int _startIndex = 0);
 	TVector(const TVector&);
-	~TVector();
+	virtual ~TVector();
 
 	const TVector& operator=(const TVector&);
+	ValType& operator[](int);
+	const ValType& operator[](int) const;
 
 	TVector operator+(const TVector&);
 	TVector operator-(const TVector&);
-	ValType operator*(const TVector&);
+	ValType operator*(const TVector&);  // scalar
 
 	TVector operator+(ValType);
 	TVector operator-(ValType);
@@ -36,64 +40,61 @@ public:
 	bool operator==(const TVector&) const;
 	bool operator!=(const TVector&) const;
 
-	friend istream operator>>(istream& _in, TVector& _vector)
-	{
-		for (int i = 0; i < _vector.size; i++)
-			_in >> _vector.elem[i];
-
-		return _in;
-	}
-
-	friend ostream& operator<<(ostream& _out, const TVector& _vector)
-	{
-		_out << "|";
-
-		for (int i = 0; i < vector.size - 1; i++)
-			_out << _vector.elem[i] << " ";
-
-		_out << _vector.elem[vector.size - 1] << "|";
-
-		return _out;
-	}
+	template<typename ValType> friend istream& operator>>(istream&, TVector<ValType>&);
+	template<typename ValType> friend ostream& operator<<(ostream&, const TVector<ValType>&);
 }; 
 
 //---------------------------------------------------------------------------
 
-template<typename ValType>
-TVector<ValType>::TVector(int size, int startIndex)
+template<class ValType>
+TVector<ValType>::TVector(int _size, int _startIndex)
 {
-	if (size <= 0)
+	if (_size < 0)
 		throw Exception("Not correct size of vector!");
 
-	if (startIndex < 0)
+	if (_startIndex < 0)
 		throw Exception("Not correct starting index of vector!");
 
-	elem - new ValType[size];
-	memset(elem, 0, size * sizeof(ValType));
+	size = _size;
+	startIndex = _startIndex;
+
+	if (size == 0)
+		elem = NULL;
+	else
+	{
+		elem = new ValType[size];
+		for (int i = 0; i < size; i++)
+			elem[i] = 0;
+	}
 };
 
-template<typename ValType>
+template<class ValType>
 TVector<ValType>::TVector(const TVector& _copy)
 {
 	size = _copy.size;
 	startIndex = _copy.startIndex;
 
-	elem = new ValType[size];
-
-	for (int i = 0; i < size; i++)
-		elem[i] = _copy.elem[i];
+	if (size == 0)
+		elem = NULL;
+	else
+	{
+		elem = new ValType[size];
+		for (int i = 0; i < size; i++)
+			elem[i] = _copy.elem[i];
+	}
 };
 
-template<typename ValType>
+template<class ValType>
 TVector<ValType>::~TVector()
 {
 	size = 0;
 	startIndex = 0;
 
 	delete[] elem;
+	elem = NULL;
 };
 
-template<typename ValType>
+template<class ValType>
 const TVector<ValType>& TVector<ValType>::operator=(const TVector& _copy)
 {
 	if (this == &_copy)
@@ -108,10 +109,28 @@ const TVector<ValType>& TVector<ValType>::operator=(const TVector& _copy)
 	for (int i = 0; i < size; i++)
 		elem[i] = _copy.elem[i];
 
-	retirn *this;
+	return *this;
 };
 
-template<typename ValType>
+template<class ValType>
+ValType& TVector<ValType>::operator[](int _index)
+{
+	if ((_index < 0) || (_index >= size))
+		throw Exception("Not correct index of vector!");
+
+	return elem[_index];
+};
+
+template<class ValType>
+const ValType& TVector<ValType>::operator[](int _index) const
+{
+	if ((_index < 0) || (_index >= size))
+		throw Exception("Not correct index of vector!");
+
+	return elem[_index];
+};
+
+template<class ValType>
 TVector<ValType> TVector<ValType>::operator+(const TVector& _add)
 {
 	if (size != _add.size)
@@ -125,7 +144,7 @@ TVector<ValType> TVector<ValType>::operator+(const TVector& _add)
 	return result;
 };
 
-template<typename ValType>
+template<class ValType>
 TVector<ValType> TVector<ValType>::operator-(const TVector& _sub)
 {
 	if (size != _sub.size)
@@ -139,7 +158,7 @@ TVector<ValType> TVector<ValType>::operator-(const TVector& _sub)
 	return result;
 };
 
-template<typename ValType>
+template<class ValType>
 ValType TVector<ValType>::operator*(const TVector& _factor)
 {
 	if (size != _factor.size)
@@ -151,9 +170,9 @@ ValType TVector<ValType>::operator*(const TVector& _factor)
 		result.elem[i] = elem[i] * _factor.elem[i];
 
 	return result;
-}
+};
 
-template<typename ValType>
+template<class ValType>
 TVector<ValType> TVector<ValType>::operator+(ValType _add)
 {
 	TVector<ValType> result(size, startIndex);
@@ -164,7 +183,7 @@ TVector<ValType> TVector<ValType>::operator+(ValType _add)
 	return result;
 };
 
-template<typename ValType>
+template<class ValType>
 TVector<ValType> TVector<ValType>::operator-(ValType _sub)
 {
 	TVector<ValType> result(size, startIndex);
@@ -175,7 +194,7 @@ TVector<ValType> TVector<ValType>::operator-(ValType _sub)
 	return result;
 };
 
-template<typename ValType>
+template<class ValType>
 TVector<ValType> TVector<ValType>::operator*(ValType _factor)
 {
 	TVector<ValType> result(size, startIndex);
@@ -186,7 +205,7 @@ TVector<ValType> TVector<ValType>::operator*(ValType _factor)
 	return result;
 };
 
-template<typename ValType>
+template<class ValType>
 float TVector<ValType>::Length() const
 {
 	float length = 0;
@@ -197,19 +216,19 @@ float TVector<ValType>::Length() const
 	return length;
 };
 
-template<typename ValType>
+template<class ValType>
 int TVector<ValType>::GetSize() const
 {
 	return size;
 };
 
-template<typename ValType>
+template<class ValType>
 int TVector<ValType>::GetStartIndex() const
 {
 	return startIndex;
 };
 
-template<typename ValType>
+template<class ValType>
 bool TVector<ValType>::operator==(const TVector& _vector) const
 {
 	if (size != _vector.size)
@@ -222,7 +241,7 @@ bool TVector<ValType>::operator==(const TVector& _vector) const
 	return 1;
 };
 
-template<typename ValType>
+template<class ValType>
 bool TVector<ValType>::operator!=(const TVector& _vector) const
 {
 	if (size != _vector.size)
@@ -233,6 +252,24 @@ bool TVector<ValType>::operator!=(const TVector& _vector) const
 			return 1;
 
 	return 0;
+};
+
+template<class ValType>
+istream& operator>>(istream& _in, TVector<ValType>& _vector)
+{
+	for (int i = 0; i < _vector.size; i++)
+		_in >> _vector.elem[i];
+
+	return _in;
+};
+
+template<class ValType>
+ostream& operator<<(ostream& _out, const TVector<ValType>& _vector)
+{
+	for (int i = 0; i < _vector.size; i++)
+		_out << _vector.elem[i] << "\t";
+
+	return _out;
 };
 
 #endif

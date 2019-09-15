@@ -6,14 +6,16 @@
 #include "exceptions.h"
 #include "TVector.h"
 
+using namespace std;
+
 template<typename ValType>
 class TMatrix : public TVector<TVector<ValType> >
 {
 public:
-	TMatrix(int size = 5);
+	TMatrix(int size = 10);
 	TMatrix(const TMatrix&);
 	TMatrix(const TVector<TVector<ValType> >&);
-	virtual ~TMatrix();
+	~TMatrix();
 
 	const TMatrix& operator=(const TMatrix&);
 
@@ -25,30 +27,33 @@ public:
 	TMatrix operator-(ValType);
 	TMatrix operator*(ValType);
 
-	TMatrix operator*(const TVector<ValType>&);
+	//TMatrix operator*(const TVector<ValType>&);
 
 	bool operator==(const TMatrix&) const;
 	bool operator!=(const TMatrix&) const;
 
-	friend istream operator>>(istream& _in, TMatrix& _matrix);
-	friend ostream operator<<(ostream& _out, const TMatrix& _matrix);
+	template<typename ValType> friend istream& operator>>(istream&, TMatrix<ValType>&);
+	template<typename ValType> friend ostream& operator<<(ostream&, const TMatrix<ValType>&);
 };
 
 //---------------------------------------------------------------------------
 
-template<typename ValueType>
-TMatrix<ValueType>::TMatrix(int size) : TVector<TVector<ValueType> >(size)
+template<typename ValType>
+TMatrix<ValType>::TMatrix(int _size) : TVector<TVector<ValType> >(_size)
 {
-	for (int i = 0; i < size; i++)
-		elem[i] = TVector<Valtype>(size - i, i);
+	if (_size <= 0)
+		throw Exception("Not correct size of matrix!");
+
+	for (int i = 0; i < _size; i++)
+		this->elem[i] = TVector<ValType>(_size - i, i);
 };
 
 template<typename ValType>
-TMatrix<ValType>::TMatrix(const TMatrix<ValType>& _copy) : TVector<TVector<ValueType> >(_copy)
+TMatrix<ValType>::TMatrix(const TMatrix<ValType>& _copy) : TVector<TVector<ValType> >(_copy)
 {};
 
 template<typename ValType>
-TMatrix<ValType>::TMatrix(const TVector<TVector<ValType> >& _vector) : TVector<TVector<ValueType> >(_vector)
+TMatrix<ValType>::TMatrix(const TVector<TVector<ValType> >& _vector) : TVector<TVector<ValType> >(_vector)
 {};
 
 template<typename ValType>
@@ -58,33 +63,100 @@ TMatrix<ValType>::~TMatrix()
 template<typename ValType>
 const TMatrix<ValType>& TMatrix<ValType>::operator=(const TMatrix<ValType>& _copy)
 {
-	if (this == &_copy)
-		return *this;
-
-	if (size != _copy.size)
-	{
-		delete[] elem;
-		elem = new TVector<ValType>[_copy.size];
-	}
-
-	size = _copy.size;
-	startIndex = _copy.startIndex;
-
-	for (int i = 0; i < size; i++)
-		elem[i] = _copy.elem[i];
-
+	TVector<TVector<ValType> >::operator=(_copy);
 	return *this;
 }
 
 template<typename ValType>
 TMatrix<ValType> TMatrix<ValType>::operator+(const TMatrix& _add)
 {
-	if (size != _add.size)
+	if (this->size != _add.size)
 		throw Exception("Not correct size of adding matrix!");
 
-	result = TMatrix<ValType>(size);
-}
-;
+	return TVector<TVector<ValType> >::operator+(_add);
+};
 
+template<typename ValType>
+TMatrix<ValType> TMatrix<ValType>::operator-(const TMatrix& _sub)
+{
+	if (this->size != _sub.size)
+		throw Exception("Not correct size of adding matrix!");
+
+	return TVector<TVector<ValType> >::operator-(_sub);
+};
+
+template<typename ValType>
+TMatrix<ValType> TMatrix<ValType>::operator*(const TMatrix& _factor)
+{
+	// todo
+};
+
+template<typename ValType>
+TMatrix<ValType> TMatrix<ValType>::operator+(ValType _add)
+{
+	TMatrix<ValType> result(this->size);
+
+	for (int i = 0; i < this->size; i++)
+		result[i] = this->elem[i] + _add;
+
+	return result;
+};
+
+template<typename ValType>
+TMatrix<ValType> TMatrix<ValType>::operator-(ValType _sub)
+{
+	TMatrix<ValType> result(this->size);
+
+	for (int i = 0; i < this->size; i++)
+		result[i] = this->elem[i] - _sub;
+
+	return result;
+};
+
+template<typename ValType>
+TMatrix<ValType> TMatrix<ValType>::operator*(ValType _factor)
+{
+	TMatrix<ValType> result(this->size);
+
+	for (int i = 0; i < this->size; i++)
+		result[i] = this->elem[i] * _factor;
+
+	return result;
+};
+
+template<typename ValType>
+bool TMatrix<ValType>::operator==(const TMatrix& _matrix) const
+{
+	return TVector<TVector<ValType> >::operator==(_matrix);
+}
+
+template<typename ValType>
+bool TMatrix<ValType>::operator!=(const TMatrix& _matrix) const
+{
+	return TVector<TVector<ValType> >::operator!=(_matrix);
+}
+
+template<typename ValType>
+istream& operator>>(istream& _in, TMatrix<ValType>& _matrix)
+{
+	for (int i = 0; i < _matrix.size; i++)
+		_in >> _matrix.elem[i];
+
+	return _in;
+};
+
+template<typename ValType>
+ostream& operator<<(ostream& _out, const TMatrix<ValType>& _matrix)
+{
+	for (int i = 0; i < _matrix.size; i++)
+	{
+		for (int j = 0; j < i; j++)  // for indentations (tab)
+			_out << "\t";
+
+		_out << _matrix.elem[i] << endl;
+	}
+
+	return _out;
+}
 
 #endif
