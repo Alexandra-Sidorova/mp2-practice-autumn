@@ -10,14 +10,14 @@ using namespace std;
 class Exception : public exception
 {
 private:
-	string msg;
+    string msg;
 public:
-	Exception(string _msg) : msg(_msg) {};
+    Exception(string _msg) : msg(_msg) {};
 
-	const char* what() const noexcept
-	{
-		return msg.c_str();
-	}
+    const char* what() const noexcept
+    {
+        return msg.c_str();
+    }
 };
 
 #endif
