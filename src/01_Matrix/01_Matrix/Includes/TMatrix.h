@@ -78,7 +78,7 @@ const TMatrix<ValType>& TMatrix<ValType>::operator=(const TMatrix<ValType>& _cop
 {
     TVector<TVector<ValType> >::operator=(_copy);
     return *this;
-}
+};
 
 template<typename ValType>
 TMatrix<ValType> TMatrix<ValType>::operator+(const TMatrix& _add)
@@ -166,13 +166,13 @@ template<typename ValType>
 bool TMatrix<ValType>::operator==(const TMatrix& _matrix) const
 {
     return TVector<TVector<ValType> >::operator==(_matrix);
-}
+};
 
 template<typename ValType>
 bool TMatrix<ValType>::operator!=(const TMatrix& _matrix) const
 {
     return TVector<TVector<ValType> >::operator!=(_matrix);
-}
+};
 
 template<typename ValType>
 istream& operator>>(istream& _in, TMatrix<ValType>& _matrix)
@@ -195,6 +195,6 @@ ostream& operator<<(ostream& _out, const TMatrix<ValType>& _matrix)
     }
 
     return _out;
-}
+};
 
 #endif
