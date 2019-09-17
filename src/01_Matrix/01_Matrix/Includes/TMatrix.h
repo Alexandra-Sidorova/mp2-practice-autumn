@@ -17,6 +17,8 @@ public:
 	TMatrix(const TVector<TVector<ValType> >&);
 	~TMatrix();
 
+	ValType Determinant();
+
 	const TMatrix& operator=(const TMatrix&);
 
 	TMatrix operator+(const TMatrix&);
@@ -27,7 +29,7 @@ public:
 	TMatrix operator-(ValType);
 	TMatrix operator*(ValType);
 
-	//TMatrix operator*(const TVector<ValType>&);
+	TVector<ValType> operator*(const TVector<ValType>&);
 
 	bool operator==(const TMatrix&) const;
 	bool operator!=(const TMatrix&) const;
@@ -55,6 +57,17 @@ TMatrix<ValType>::TMatrix(const TMatrix<ValType>& _copy) : TVector<TVector<ValTy
 template<typename ValType>
 TMatrix<ValType>::TMatrix(const TVector<TVector<ValType> >& _vector) : TVector<TVector<ValType> >(_vector)
 {};
+
+template<typename ValType>
+ValType TMatrix<ValType>::Determinant()
+{
+	ValType det = this->elem[0][0];
+
+	for (int i = 1; i < this->size; i++)
+		det *= this->elem[i][0];
+
+	return det;
+};
 
 template<typename ValType>
 TMatrix<ValType>::~TMatrix()
@@ -88,7 +101,17 @@ TMatrix<ValType> TMatrix<ValType>::operator-(const TMatrix& _sub)
 template<typename ValType>
 TMatrix<ValType> TMatrix<ValType>::operator*(const TMatrix& _factor)
 {
-	// todo
+	if (this->size != _factor.size)
+		throw Exception("Not correct size of adding matrix!");
+
+	TMatrix<ValType> result(this->size);
+
+	for (int i = 0; i < this->size; i++)
+		for (int j = i; j < this->size; j++) {
+			for (int k = i; k <= j; k++)
+				result.elem[i][j - i] += this->elem[i][k - i] * _factor.elem[k][j - k];
+		}
+	return result;
 };
 
 template<typename ValType>
@@ -120,6 +143,21 @@ TMatrix<ValType> TMatrix<ValType>::operator*(ValType _factor)
 
 	for (int i = 0; i < this->size; i++)
 		result[i] = this->elem[i] * _factor;
+
+	return result;
+};
+
+template<typename ValType>
+TVector<ValType> TMatrix<ValType>::operator*(const TVector<ValType>& _factor)
+{
+	if (this->size != _factor.GetSize())
+		throw Exception("Not correct size of adding vector!");
+
+	TVector<ValType> result(this->size);
+
+	for (int i = 0; i < this->size; i++)
+		for (int j = 0; j < this->elem[i].GetSize(); j++)
+			result[i] += this->elem[i][j] * _factor[i + j];
 
 	return result;
 };

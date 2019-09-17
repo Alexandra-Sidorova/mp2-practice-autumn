@@ -22,6 +22,7 @@ public:
 	virtual ~TVector();
 
 	const TVector& operator=(const TVector&);
+
 	ValType& operator[](int);
 	const ValType& operator[](int) const;
 
