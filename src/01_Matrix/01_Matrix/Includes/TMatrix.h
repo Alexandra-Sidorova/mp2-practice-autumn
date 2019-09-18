@@ -107,10 +107,10 @@ TMatrix<ValType> TMatrix<ValType>::operator*(const TMatrix& _factor)
     TMatrix<ValType> result(this->size);
 
     for (int i = 0; i < this->size; i++)
-        for (int j = i; j < this->size; j++) {
+        for (int j = i; j < this->size; j++)
             for (int k = i; k <= j; k++)
                 result.elem[i][j - i] += this->elem[i][k - i] * _factor.elem[k][j - k];
-        }
+        
     return result;
 };
 
