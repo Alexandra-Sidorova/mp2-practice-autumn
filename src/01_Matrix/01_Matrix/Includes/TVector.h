@@ -190,7 +190,7 @@ TVector<ValType> TVector<ValType>::operator-(ValType _sub)
     TVector<ValType> result(size, startIndex);
 
     for (int i = 0; i < size; i++)
-        result.elem[i] = elem[i] + _sub;
+        result.elem[i] = elem[i] - _sub;
 
     return result;
 };
@@ -214,7 +214,7 @@ float TVector<ValType>::Length() const
     for (int i = 0; i < size; i++)
         length =  length + elem[i] * elem[i];
 
-    return length;
+    return sqrt(length);
 };
 
 template<class ValType>
