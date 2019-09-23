@@ -11,11 +11,12 @@ void main()
 {
 
     TMatrix<int> A(5), B(5), C(3);
-    TVector<int> v1(5), v2(3);
+    TVector<int> v1(5), v2(5), v3(3);
 
     for (int i = 0; i < A.GetSize(); i++)  // filling out
     {
         v1[i] = rand() % 10;
+        v2[i] = rand() % 10;
 
         for (int j = 0; j < A.GetSize() - i; j++)
         {
@@ -26,7 +27,7 @@ void main()
 
     for (int i = 0; i < C.GetSize(); i++)  // filling out
     {
-        v2[i] = rand() % 10;
+        v3[i] = rand() % 10;
 
         for (int j = 0; j < C.GetSize() - i; j++)
             C[i][j] = rand() % 10;
@@ -47,11 +48,103 @@ void main()
         cout << v1 << endl << endl;
         cout << "Vector v2:" << endl;
         cout << v2 << endl << endl;
+        cout << "Vector v3:" << endl;
+        cout << v2 << endl << endl;
     }
     catch (Exception ex)
     {
         cout << ex.what() << endl << endl;
     }
+
+    cout << "##### Test of Vectors #####" << endl << endl;
+    
+    try  // adding
+    {
+        cout << "##### Adding #####" << endl << endl;
+        cout << "Vector v1 + v2:" << endl;
+        cout << v1 + v2 << endl;
+        cout << "Vector v1 + v3:" << endl;
+        cout << v1 + v3 << endl;
+    }
+    catch (Exception ex)
+    {
+        cout << ex.what() << endl << endl;
+    }
+
+    try  // subtraction
+    {
+        cout << "##### Subtraction #####" << endl << endl;
+        cout << "Vector v1 - v2:" << endl;
+        cout << v1 - v2 << endl;
+        cout << "Vector v1 - v3:" << endl;
+        cout << v1 - v3 << endl;
+    }
+    catch (Exception ex)
+    {
+        cout << ex.what() << endl << endl;
+    }
+
+    try  // multiplication of vectors
+    {
+        cout << "##### Multiplication of vectors #####" << endl << endl;
+        cout << "Vector v1 * v2:" << endl;
+        cout << v1 * v2 << endl;
+        cout << "Vector v1 * v3:" << endl;
+        cout << v1 * v3 << endl;
+    }
+    catch (Exception ex)
+    {
+        cout << ex.what() << endl << endl;
+    }
+
+    try  // actions between vectors and numbers
+    {
+        cout << "##### Actions between vectors and numbers #####" << endl << endl;
+        cout << "v1 + 10:" << endl;
+        cout << v1 + 10 << endl;
+        cout << "v2 - 6:" << endl;
+        cout << v2 - 6 << endl;
+        cout << "v3 * 4:" << endl;
+        cout << v3 * 4 << endl;
+    }
+    catch (Exception ex)
+    {
+        cout << ex.what() << endl << endl;
+    }
+
+    try  // length
+    {
+        cout << "##### Length of vectors #####" << endl << endl;
+        cout << "len|A|:" << endl;
+        cout << A.Length() << endl << endl;
+        cout << "len|B|:" << endl;
+        cout << B.Length() << endl << endl;
+        cout << "len|C|:" << endl;
+        cout << C.Length() << endl << endl;
+    }
+    catch (Exception ex)
+    {
+        cout << ex.what() << endl << endl;
+    }
+
+    try  // comparisons
+    {
+        cout << "##### Comparisons #####" << endl << endl;
+        cout << "v1 == v2? : ";
+        cout << (v1 == v2) << endl << endl;
+        cout << "v3 == v3? : ";
+        cout << (v3 == v3) << endl << endl;
+        cout << "v1 != v3? : ";
+        cout << (v1 != v3) << endl << endl;
+        cout << "v2 != v2? : ";
+        cout << (v2 != v2) << endl << endl;
+    }
+    catch (Exception ex)
+    {
+        cout << ex.what() << endl << endl;
+    }
+
+    cout << "##### Test of Matrices #####" << endl << endl;
 
     try  // adding
     {

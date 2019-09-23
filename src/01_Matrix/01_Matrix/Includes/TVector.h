@@ -165,10 +165,10 @@ ValType TVector<ValType>::operator*(const TVector& _factor)
     if (size != _factor.size)
         throw Exception("Not correct size of vectors!");
 
-    TVector<ValType> result(size, startIndex);
+    ValType result = 0;
 
     for (int i = 0; i < size; i++)
-        result.elem[i] = elem[i] * _factor.elem[i];
+        result = elem[i] * _factor.elem[i];
 
     return result;
 };
@@ -212,7 +212,7 @@ float TVector<ValType>::Length() const
     float length = 0;
 
     for (int i = 0; i < size; i++)
-        length =  length + elem[i] * elem[i];
+        length += (elem[i] * elem[i]);
 
     return sqrt(length);
 };
