@@ -15,22 +15,22 @@ void main()
 
     for (int i = 0; i < A.GetSize(); i++)  // filling out
     {
-        v1[i] = rand() % 10;
-        v2[i] = rand() % 10;
+        v1[i] = rand() % 4 + 1;
+        v2[i] = rand() % 4 + 1;
 
         for (int j = 0; j < A.GetSize() - i; j++)
         {
-            A[i][j] = rand() % 10;
-            B[i][j] = rand() % 10;
+            A[i][j] = rand() % 4 + 1;
+            B[i][j] = rand() % 4 + 1;
         }
     }
 
     for (int i = 0; i < C.GetSize(); i++)  // filling out
     {
-        v3[i] = rand() % 10;
+        v3[i] = rand() % 4 + 1;
 
         for (int j = 0; j < C.GetSize() - i; j++)
-            C[i][j] = rand() % 10;
+            C[i][j] = rand() % 4 + 1;
     }
     
     try  // output
@@ -58,6 +58,39 @@ void main()
 
     cout << "##### Test of Vectors #####" << endl << endl;
     
+    try  // parameterized constructors
+    {
+        cout << "##### Test of Parameterized constructors #####" << endl << endl;
+        cout << "Vector with size 5: " << endl;
+        TVector<int> v4(5);
+        cout << v4 << endl;
+        cout << "Vector with size 2 and start index 3: " << endl;
+        TVector<int> v5(2, 3);
+        cout << v5 << endl;
+        cout << "Start Index = " << v5.GetStartIndex() << endl;
+        cout << "Vector with size -100: " << endl;
+        TVector<int> v6(-100);
+        cout << v6 << endl;
+    }
+    catch (Exception ex)
+    {
+        cout << ex.what() << endl << endl;
+    }
+
+    try  // copy constructors
+    {
+        cout << "##### Test of Copy constructors #####" << endl << endl;
+        cout << "Vector v4(v1): " << endl;
+        TVector<int> v4(v1);
+        cout << v4 << endl;
+        cout << "Vector v1: " << endl;
+        cout << v1 << endl << endl;
+    }
+    catch (Exception ex)
+    {
+        cout << ex.what() << endl << endl;
+    }
+
     try  // adding
     {
         cout << "##### Adding #####" << endl << endl;
@@ -145,6 +178,35 @@ void main()
     }
 
     cout << "##### Test of Matrices #####" << endl << endl;
+
+    try // parameterized constructors
+    {
+        cout << "##### Test of Parameterized constructors #####" << endl << endl;
+        cout << "Matrix with size 3: " << endl;
+        TMatrix<int> D(3);
+        cout << D << endl;
+        cout << "Matrix with size -25: " << endl;
+        TVector<int> F(-250);
+        cout << F << endl;
+    }
+    catch (Exception ex)
+    {
+        cout << ex.what() << endl << endl;
+    }
+
+    try  // copy constructors
+    {
+        cout << "##### Test of Copy constructors #####" << endl << endl;
+        cout << "Matrix G(A): " << endl;
+        TMatrix<int> G(A);
+        cout << G << endl;
+        cout << "Matrix A: " << endl;
+        cout << A << endl;
+    }
+    catch (Exception ex)
+    {
+        cout << ex.what() << endl << endl;
+    }
 
     try  // adding
     {

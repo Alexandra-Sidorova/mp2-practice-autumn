@@ -17,7 +17,7 @@ public:
     TMatrix(const TVector<TVector<ValType> >&);
     ~TMatrix();
 
-    ValType Determinant();
+    ValType Determinant() const;
 
     const TMatrix& operator=(const TMatrix&);
 
@@ -43,9 +43,6 @@ public:
 template<typename ValType>
 TMatrix<ValType>::TMatrix(int _size) : TVector<TVector<ValType> >(_size)
 {
-    if (_size <= 0)
-        throw Exception("Not correct size of matrix!");
-
     for (int i = 0; i < _size; i++)
         this->elem[i] = TVector<ValType>(_size - i, i);
 };
@@ -59,7 +56,7 @@ TMatrix<ValType>::TMatrix(const TVector<TVector<ValType> >& _vector) : TVector<T
 {};
 
 template<typename ValType>
-ValType TMatrix<ValType>::Determinant()
+ValType TMatrix<ValType>::Determinant() const
 {
     ValType det = this->elem[0][0];
 
@@ -76,7 +73,20 @@ TMatrix<ValType>::~TMatrix()
 template<typename ValType>
 const TMatrix<ValType>& TMatrix<ValType>::operator=(const TMatrix<ValType>& _copy)
 {
-    TVector<TVector<ValType> >::operator=(_copy);
+    if (this == &_copy)
+        return *this;
+
+    if (this->size != _copy.size)
+    {
+        this->size = _copy.size;
+
+        delete[] this->elem;
+        this->elem = new TVector<ValType>[_copy.size];
+    }
+
+    for (int i = 0; i < this->size; i++)
+        this->elem[i] = _copy.elem[i];
+
     return *this;
 };
 
@@ -85,8 +95,13 @@ TMatrix<ValType> TMatrix<ValType>::operator+(const TMatrix& _add)
 {
     if (this->size != _add.size)
         throw Exception("Not correct size of adding matrix!");
+    
+    TMatrix<ValType> result(this->size);
 
-    return TVector<TVector<ValType> >::operator+(_add);
+    for (int i = 0; i < this->size; i++)
+        result.elem[i] = this->elem[i] + _add.elem[i];
+
+    return result;
 };
 
 template<typename ValType>
@@ -95,7 +110,12 @@ TMatrix<ValType> TMatrix<ValType>::operator-(const TMatrix& _sub)
     if (this->size != _sub.size)
         throw Exception("Not correct size of adding matrix!");
 
-    return TVector<TVector<ValType> >::operator-(_sub);
+    TMatrix<ValType> result(this->size);
+
+    for (int i = 0; i < this->size; i++)
+        result.elem[i] = this->elem[i] - _sub.elem[i];
+
+    return result;
 };
 
 template<typename ValType>
@@ -117,10 +137,10 @@ TMatrix<ValType> TMatrix<ValType>::operator*(const TMatrix& _factor)
 template<typename ValType>
 TMatrix<ValType> TMatrix<ValType>::operator+(ValType _add)
 {
-    TMatrix<ValType> result(this->size);
+    TMatrix<ValType> result(*this);
 
     for (int i = 0; i < this->size; i++)
-        result[i] = this->elem[i] + _add;
+        result[i] = result.elem[i] + _add;
 
     return result;
 };
@@ -128,10 +148,10 @@ TMatrix<ValType> TMatrix<ValType>::operator+(ValType _add)
 template<typename ValType>
 TMatrix<ValType> TMatrix<ValType>::operator-(ValType _sub)
 {
-    TMatrix<ValType> result(this->size);
+    TMatrix<ValType> result(*this);
 
     for (int i = 0; i < this->size; i++)
-        result[i] = this->elem[i] - _sub;
+        result[i] = result.elem[i] - _sub;
 
     return result;
 };
@@ -139,10 +159,10 @@ TMatrix<ValType> TMatrix<ValType>::operator-(ValType _sub)
 template<typename ValType>
 TMatrix<ValType> TMatrix<ValType>::operator*(ValType _factor)
 {
-    TMatrix<ValType> result(this->size);
+    TMatrix<ValType> result(*this);
 
     for (int i = 0; i < this->size; i++)
-        result[i] = this->elem[i] * _factor;
+        result[i] = result.elem[i] * _factor;
 
     return result;
 };
@@ -165,13 +185,20 @@ TVector<ValType> TMatrix<ValType>::operator*(const TVector<ValType>& _factor)
 template<typename ValType>
 bool TMatrix<ValType>::operator==(const TMatrix& _matrix) const
 {
-    return TVector<TVector<ValType> >::operator==(_matrix);
+    if (this->size != _matrix.size)
+        return false;
+
+    for (int i = 0; i < this->size; i++)
+        if (this->elem[i] != _matrix.elem[i])
+            return false;
+
+    return true;
 };
 
 template<typename ValType>
 bool TMatrix<ValType>::operator!=(const TMatrix& _matrix) const
 {
-    return TVector<TVector<ValType> >::operator!=(_matrix);
+    return !(*this == _matrix);
 };
 
 template<typename ValType>

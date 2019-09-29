@@ -101,11 +101,14 @@ const TVector<ValType>& TVector<ValType>::operator=(const TVector& _copy)
     if (this == &_copy)
         return *this;
 
-    size = _copy.size;
-    startIndex = _copy.startIndex;
+    if (size != _copy.size)
+    {
+        size = _copy.size;
+        delete[] elem;
+        elem = new ValType[size];
+    }
 
-    delete[] elem;
-    elem = new ValType[size];
+    startIndex = _copy.startIndex;
 
     for (int i = 0; i < size; i++)
         elem[i] = _copy.elem[i];
@@ -137,6 +140,9 @@ TVector<ValType> TVector<ValType>::operator+(const TVector& _add)
     if (size != _add.size)
         throw Exception("Not correct size of vectors!");
 
+    if (startIndex != _add.startIndex)
+        throw Exception("Not correct start Index of vectors!");
+
     TVector<ValType> result(size, startIndex);
 
     for (int i = 0; i < size; i++)
@@ -150,6 +156,9 @@ TVector<ValType> TVector<ValType>::operator-(const TVector& _sub)
 {
     if (size != _sub.size)
         throw Exception("Not correct size of vectors!");
+
+    if (startIndex != _sub.startIndex)
+        throw Exception("Not correct start Index of vectors!");
 
     TVector<ValType> result(size, startIndex);
 
@@ -165,10 +174,13 @@ ValType TVector<ValType>::operator*(const TVector& _factor)
     if (size != _factor.size)
         throw Exception("Not correct size of vectors!");
 
+    if (startIndex != _factor.startIndex)
+        throw Exception("Not correct start Index of vectors!");
+
     ValType result = 0;
 
     for (int i = 0; i < size; i++)
-        result = elem[i] * _factor.elem[i];
+        result += (elem[i] * _factor.elem[i]);
 
     return result;
 };
@@ -176,10 +188,10 @@ ValType TVector<ValType>::operator*(const TVector& _factor)
 template<class ValType>
 TVector<ValType> TVector<ValType>::operator+(ValType _add)
 {
-    TVector<ValType> result(size, startIndex);
+    TVector<ValType> result(*this);
 
     for (int i = 0; i < size; i++)
-        result.elem[i] = elem[i] + _add;
+        result.elem[i] += _add;
 
     return result;
 };
@@ -187,10 +199,10 @@ TVector<ValType> TVector<ValType>::operator+(ValType _add)
 template<class ValType>
 TVector<ValType> TVector<ValType>::operator-(ValType _sub)
 {
-    TVector<ValType> result(size, startIndex);
+    TVector<ValType> result(*this);
 
     for (int i = 0; i < size; i++)
-        result.elem[i] = elem[i] - _sub;
+        result.elem[i] -= _sub;
 
     return result;
 };
@@ -198,10 +210,10 @@ TVector<ValType> TVector<ValType>::operator-(ValType _sub)
 template<class ValType>
 TVector<ValType> TVector<ValType>::operator*(ValType _factor)
 {
-    TVector<ValType> result(size, startIndex);
+    TVector<ValType> result(*this);
 
     for (int i = 0; i < size; i++)
-        result.elem[i] = elem[i] * _factor;
+        result.elem[i] *= _factor;
 
     return result;
 };
@@ -232,27 +244,20 @@ int TVector<ValType>::GetStartIndex() const
 template<class ValType>
 bool TVector<ValType>::operator==(const TVector& _vector) const
 {
-    if (size != _vector.size)
-        return 0;
+    if ((size != _vector.size) || (startIndex != _vector.startIndex))
+        return false;
 
     for (int i = 0; i < size; i++)
         if (elem[i] != _vector.elem[i])
-            return 0;
+            return false;
 
-    return 1;
+    return true;
 };
 
 template<class ValType>
 bool TVector<ValType>::operator!=(const TVector& _vector) const
 {
-    if (size != _vector.size)
-        return 1;
-
-    for (int i = 0; i < size; i++)
-        if (elem[i] != _vector.elem[i])
-            return 1;
-
-    return 0;
+    return !(*this == _vector);
 };
 
 template<class ValType>
