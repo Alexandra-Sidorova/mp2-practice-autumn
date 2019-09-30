@@ -15,10 +15,11 @@ class RPN
 private:
 	static int GetPriority(const char);
 	static bool IsOperation(const char);
-	static char* ReverseChar(char*);
+
 public:
+	static int GetCountVariables(const char*);
 	static string CreateRPN(const char*);
-	static double ValueRPN(char*, TCouple<ValType>*);
+	static double CalculateRPN(string, TCouple<ValType>*, int);
 };
 
 //-----------------------------------------------------------
@@ -46,21 +47,24 @@ int RPN<ValType>::GetPriority(const char _oper)
 };
 
 template<typename ValType>
-bool RPN<ValType>::IsOperation(const char _s) 
+bool RPN<ValType>::IsOperation(const char _s)
 {
 	return (_s == '+' || _s == '-' || _s == '*' || _s == '/' ||
 		_s == '(' || _s == ')');
-}
+};
 
 template<typename ValType>
-char* RPN<ValType>::ReverseChar(char* _str)
+int RPN<ValType>::GetCountVariables(const char* _str)
 {
-	char reverse_str[strlen(_str)];
+	int count = 0;
 
 	for (int i = 0; i < strlen(_str); i++)
-		reverse_str[i] = _str[strlen(_str) - i];
+	{
+		if ((_str[i] != ' ') && (!IsOperation(_str[i])))
+			count++;
+	}
 
-	return reverse_str;
+	return count;
 };
 
 template<typename ValType>
@@ -129,5 +133,48 @@ string RPN<ValType>::CreateRPN(const char* _str)
 
 	return rpn;
 };
+
+template<typename ValType>
+double RPN<ValType>::CalculateRPN(string _str, TCouple<ValType>* _data, int _countData)
+{
+	if (_str.length() == 0)
+		throw Exception("Error: String is empty!");
+
+	TStack<double> value(_str.length());
+
+	for (int i = 0; i < _str.length(); i++)
+	{
+		if (!IsOperation(static_cast<char>(_str[i])))
+		{
+			for (int j = 0; j < _countData; j++)
+			{
+				if (_data[j].var == static_cast<char>(_str[i]))
+				{
+					value.Push(static_cast<double>(_data[i].value));
+					break;
+				}
+			}
+
+			continue;
+		}
+
+		double rightOperand = value.Pop();
+		double leftOperand = value.Pop();
+		double res = 0;
+
+		if (static_cast<char>(_str[i]) == '+')
+			res = leftOperand + rightOperand;
+		if (static_cast<char>(_str[i]) == '-')
+			res = leftOperand - rightOperand;
+		if (static_cast<char>(_str[i]) == '*')
+			res = leftOperand * rightOperand;
+		if (static_cast<char>(_str[i]) == '/')
+			res = leftOperand / rightOperand;
+
+		value.Push(res);
+	}
+
+	return value.Pop();
+}
 
 #endif

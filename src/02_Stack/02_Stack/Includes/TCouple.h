@@ -8,7 +8,16 @@ class TCouple
 {
 public:
 	char var;
-	ValType val;
+	ValType value;
+
+	TCouple();
 };
+
+template<typename ValType>
+TCouple<ValType>::TCouple()
+{
+	var = 0;
+	value = 0;
+}
 
 #endif
