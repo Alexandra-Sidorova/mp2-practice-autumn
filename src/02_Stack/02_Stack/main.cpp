@@ -8,10 +8,11 @@ using namespace std;
 
 void main()
 {
-	//char str[] = "A + B   * (C -D)/(F+E)+K";
-	char str[] = "A + B * C";
+	char str[] = "A + B   * (C -D)/(F+E)+K";
+	//char str[] = "A + B * C / A ";
 	string rpn = RPN<double>::CreateRPN(str);
 	cout << rpn << endl;
+	//cout << RPN<double>::GetCountVariables(str);
 
 	TCouple<double>* data = new TCouple<double>[RPN<double>::GetCountVariables(str)];
 

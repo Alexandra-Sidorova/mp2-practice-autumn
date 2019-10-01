@@ -5,7 +5,7 @@
 #include "TCouple.h"
 #include "exceptions.h"
 
-#include <string>
+#include <cstring>
 
 using namespace std;
 
@@ -57,11 +57,16 @@ template<typename ValType>
 int RPN<ValType>::GetCountVariables(const char* _str)
 {
 	int count = 0;
+	char* vars = new char[strlen(_str) + 1];
+	memset(vars, 0, sizeof(char) * (strlen(_str) + 1));
+
 
 	for (int i = 0; i < strlen(_str); i++)
 	{
-		if ((_str[i] != ' ') && (!IsOperation(_str[i])))
-			count++;
+		char symbol = _str[i];
+
+		if ((symbol != ' ') && (!IsOperation(symbol)) && (strchr(vars, symbol) == NULL))
+				vars[count++] += symbol;
 	}
 
 	return count;
@@ -150,7 +155,7 @@ double RPN<ValType>::CalculateRPN(string _str, TCouple<ValType>* _data, int _cou
 			{
 				if (_data[j].var == static_cast<char>(_str[i]))
 				{
-					value.Push(static_cast<double>(_data[i].value));
+					value.Push(static_cast<double>(_data[j].value));
 					break;
 				}
 			}
