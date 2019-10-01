@@ -17,8 +17,9 @@ private:
 	static bool IsOperation(const char);
 
 public:
-	static int GetCountVariables(const char*);
-	static string CreateRPN(const char*);
+	static int GetCountVariables(string);
+	static char* GetListOfVariables(string);
+	static string CreateRPN(string);
 	static double CalculateRPN(string, TCouple<ValType>*, int);
 };
 
@@ -54,16 +55,18 @@ bool RPN<ValType>::IsOperation(const char _s)
 };
 
 template<typename ValType>
-int RPN<ValType>::GetCountVariables(const char* _str)
+int RPN<ValType>::GetCountVariables(string _str)
 {
+	if (_str.length() == 0)
+		return 0;
+
 	int count = 0;
-	char* vars = new char[strlen(_str) + 1];
-	memset(vars, 0, sizeof(char) * (strlen(_str) + 1));
+	char* vars = new char[_str.length() + 1];
+	memset(vars, 0, sizeof(char) * (_str.length() + 1));
 
-
-	for (int i = 0; i < strlen(_str); i++)
+	for (int i = 0; i < _str.length(); i++)
 	{
-		char symbol = _str[i];
+		char symbol = static_cast<char>(_str[i]);
 
 		if ((symbol != ' ') && (!IsOperation(symbol)) && (strchr(vars, symbol) == NULL))
 				vars[count++] += symbol;
@@ -73,28 +76,48 @@ int RPN<ValType>::GetCountVariables(const char* _str)
 };
 
 template<typename ValType>
-string RPN<ValType>::CreateRPN(const char* _str)
+char* RPN<ValType>::GetListOfVariables(string _str)
 {
-	if (strlen(_str) == 0)
+	int count = 0;
+	char* vars = new char[GetCountVariables(_str) + 1];
+	memset(vars, 0, sizeof(char) * (GetCountVariables(_str) + 1));
+
+	for (int i = 0; i < _str.length(); i++)
+	{
+		char symbol = static_cast<char>(_str[i]);
+
+		if ((symbol != ' ') && (!IsOperation(symbol)) && (strchr(vars, symbol) == NULL))
+			vars[count++] += symbol;
+	}
+
+	return vars;
+}
+
+template<typename ValType>
+string RPN<ValType>::CreateRPN(string _str)
+{
+	if (_str.length() == 0)
 		throw Exception("Error: String is empty!");
 
-	TStack<char> st1(strlen(_str) + 1);  // operations
-	TStack<char> st2(strlen(_str) + 1);  // operands
+	TStack<char> st1(_str.length() + 1);  // operations
+	TStack<char> st2(_str.length() + 1);  // operands
 
-	for (int i = 0; i < strlen(_str); i++)
+	for (int i = 0; i < _str.length(); i++)
 	{
-		if (_str[i] == ' ')
+		char symbol = static_cast<char>(_str[i]);
+
+		if (symbol == ' ')
 			continue;
 
-		if (IsOperation(_str[i]))
+		if (IsOperation(symbol))
 		{
-			if (_str[i] == '(')
+			if (symbol == '(')
 			{
-				st1.Push(_str[i]);
+				st1.Push(symbol);
 				continue;
 			}
 
-			if (_str[i] == ')')
+			if (symbol == ')')
 			{
 				while (st1.TopWatch() != '(')
 					st2.Push(st1.Pop());
@@ -103,23 +126,17 @@ string RPN<ValType>::CreateRPN(const char* _str)
 				continue;
 			}
 
-			if (st1.IsEmpty())
+			if ((st1.IsEmpty()) || (GetPriority(symbol) >= GetPriority(st1.TopWatch())))
 			{
-				st1.Push(_str[i]);
+				st1.Push(symbol);
 				continue;
 			}
 
-			if (GetPriority(_str[i]) >= GetPriority(st1.TopWatch()))
-			{
-				st1.Push(_str[i]);
-				continue;
-			}
-
-			while(GetPriority(_str[i]) < GetPriority(st1.TopWatch()))
+			while(GetPriority(symbol) < GetPriority(st1.TopWatch()))
 				st2.Push(st1.Pop());
 		}
 
-		st2.Push(_str[i]);
+		st2.Push(symbol);
 	}
 
 	while (!st1.IsEmpty())
@@ -180,6 +197,6 @@ double RPN<ValType>::CalculateRPN(string _str, TCouple<ValType>* _data, int _cou
 	}
 
 	return value.Pop();
-}
+};
 
 #endif
