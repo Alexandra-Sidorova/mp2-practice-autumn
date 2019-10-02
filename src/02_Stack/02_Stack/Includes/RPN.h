@@ -132,8 +132,11 @@ string RPN<ValType>::CreateRPN(string _str)
 				continue;
 			}
 
-			while(GetPriority(symbol) < GetPriority(st1.TopWatch()))
+			while((!st1.IsEmpty()) && (GetPriority(symbol) <= GetPriority(st1.TopWatch())))
 				st2.Push(st1.Pop());
+
+			st1.Push(symbol);
+			continue;
 		}
 
 		st2.Push(symbol);
