@@ -272,6 +272,9 @@ istream& operator>>(istream& _in, TVector<ValType>& _vector)
 template<class ValType>
 ostream& operator<<(ostream& _out, const TVector<ValType>& _vector)
 {
+	for (int i = 0; i < _vector.GetStartIndex(); i++)
+		_out << "\t";
+
     for (int i = 0; i < _vector.size; i++)
         _out << _vector.elem[i] << "\t";
 

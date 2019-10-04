@@ -214,12 +214,7 @@ template<typename ValType>
 ostream& operator<<(ostream& _out, const TMatrix<ValType>& _matrix)
 {
     for (int i = 0; i < _matrix.size; i++)
-    {
-        for (int j = 0; j < i; j++)  // for indentations (tab)
-            _out << "\t";
-
-        _out << _matrix.elem[i] << endl;
-    }
+		        _out << _matrix.elem[i] << endl;
 
     return _out;
 };

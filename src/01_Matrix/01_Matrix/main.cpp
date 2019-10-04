@@ -5,32 +5,34 @@
 #include "Includes/TMatrix.h"
 #include "Includes/exceptions.h"
 
+#define RANDOM 4
+
 using namespace std;
 
 void main()
 {
 
     TMatrix<int> A(5), B(5), C(3);
-    TVector<int> v1(5), v2(5), v3(3);
+    TVector<int> v1(5, 1), v2(5, 1), v3(3);
 
     for (int i = 0; i < A.GetSize(); i++)  // filling out
     {
-        v1[i] = rand() % 4 + 1;
-        v2[i] = rand() % 4 + 1;
+        v1[i] = rand() % RANDOM + 1;
+        v2[i] = rand() % RANDOM + 1;
 
         for (int j = 0; j < A.GetSize() - i; j++)
         {
-            A[i][j] = rand() % 4 + 1;
-            B[i][j] = rand() % 4 + 1;
+            A[i][j] = rand() % RANDOM + 1;
+            B[i][j] = rand() % RANDOM + 1;
         }
     }
 
     for (int i = 0; i < C.GetSize(); i++)  // filling out
     {
-        v3[i] = rand() % 4 + 1;
+        v3[i] = rand() % RANDOM + 1;
 
         for (int j = 0; j < C.GetSize() - i; j++)
-            C[i][j] = rand() % 4 + 1;
+            C[i][j] = rand() % RANDOM + 1;
     }
     
     try  // output
