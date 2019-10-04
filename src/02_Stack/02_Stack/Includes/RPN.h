@@ -61,8 +61,8 @@ int RPN<ValType>::GetCountVariables(string _str)
 		return 0;
 
 	int count = 0;
-	char* vars = new char[_str.length() + 1];
-	memset(vars, 0, sizeof(char) * (_str.length() + 1));
+	char* vars = new char[_str.length()];
+	memset(vars, 0, sizeof(char) * (_str.length()));
 
 	for (int i = 0; i < _str.length(); i++)
 	{
@@ -78,9 +78,12 @@ int RPN<ValType>::GetCountVariables(string _str)
 template<typename ValType>
 char* RPN<ValType>::GetListOfVariables(string _str)
 {
+	if (_str.length() == 0)
+		throw Exception("Error: string is empty!");
+
 	int count = 0;
-	char* vars = new char[GetCountVariables(_str) + 1];
-	memset(vars, 0, sizeof(char) * (GetCountVariables(_str) + 1));
+	char* vars = new char[GetCountVariables(_str)];
+	memset(vars, 0, sizeof(char) * (GetCountVariables(_str)));
 
 	for (int i = 0; i < _str.length(); i++)
 	{
@@ -143,10 +146,7 @@ string RPN<ValType>::CreateRPN(string _str)
 	}
 
 	while (!st1.IsEmpty())
-	{
-		char tmp = st1.Pop();
-		st2.Push(tmp);
-	}
+		st2.Push(st1.Pop());
 
 	string rpn(st2.GetSize(), 0);
 

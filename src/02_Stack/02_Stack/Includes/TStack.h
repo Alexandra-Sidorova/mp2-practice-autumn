@@ -32,11 +32,12 @@ public:
 template<typename ValType>
 TStack<ValType>::TStack(int _size) : size(_size)
 {
-	if (size < 0)
+	if (size <= 0)
 		throw Exception("Not correct size of stack!");
 
 	elem = new ValType[size];
-	memset(elem, 0, sizeof(ValType) * size);
+	for (int i = 0; i < size; i++)
+		elem[i] = 0;
 
 	top = 0;
 };
@@ -45,7 +46,8 @@ template<typename ValType>
 TStack<ValType>::TStack(const TStack<ValType>& _copy) : size(_copy.size), top(_copy.top)
 {
 	elem = new ValType[size];
-	memset(elem, _copy.elem, sizeof(ValType) * size);
+	for (int i = 0; i < size; i++)
+		elem[i] = _copy.elem[i];
 };
 
 template<typename ValType>
