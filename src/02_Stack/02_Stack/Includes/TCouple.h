@@ -7,17 +7,17 @@ template<typename ValType>
 class TCouple
 {
 public:
-	char var;
-	ValType value;
+    char var;
+    ValType value;
 
-	TCouple();
+    TCouple();
 };
 
 template<typename ValType>
 TCouple<ValType>::TCouple()
 {
-	var = 0;
-	value = 0;
+    var = 0;
+    value = 0;
 }
 
 #endif

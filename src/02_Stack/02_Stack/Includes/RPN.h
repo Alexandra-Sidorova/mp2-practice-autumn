@@ -6,6 +6,7 @@
 #include "exceptions.h"
 
 #include <cstring>
+#include <cctype>
 
 using namespace std;
 
@@ -13,14 +14,14 @@ template<typename ValType>
 class RPN
 {
 private:
-	static int GetPriority(const char);
-	static bool IsOperation(const char);
+    static int GetPriority(const char);
+    static bool IsOperation(const char);
 
 public:
-	static int GetCountVariables(string);
-	static char* GetListOfVariables(string);
-	static string CreateRPN(string);
-	static double CalculateRPN(string, TCouple<ValType>*, int);
+    static int GetCountVariables(string);
+    static char* GetListOfVariables(string);
+    static string CreateRPN(string);
+    static double CalculateRPN(string, TCouple<ValType>*, int);
 };
 
 //-----------------------------------------------------------
@@ -28,178 +29,195 @@ public:
 template<typename ValType>
 int RPN<ValType>::GetPriority(const char _oper)
 {
-	switch (_oper)
-	{
-	case '(':
-		return 1;
-	case ')':
-		return 1;
-	case '+':
-		return 2;
-	case '-':
-		return 2;
-	case '*':
-		return 3;
-	case '/':
-		return 3;
-	default:
-		throw Exception("Error: Invalid character!");
-	}
+    switch (_oper)
+    {
+    case '(':
+        return 1;
+    case ')':
+        return 1;
+    case '+':
+        return 2;
+    case '-':
+        return 2;
+    case '*':
+        return 3;
+    case '/':
+        return 3;
+    default:
+        throw Exception("Error: Invalid character!");
+    }
 };
 
 template<typename ValType>
 bool RPN<ValType>::IsOperation(const char _s)
 {
-	return (_s == '+' || _s == '-' || _s == '*' || _s == '/' ||
-		_s == '(' || _s == ')');
+    return (_s == '+' || _s == '-' || _s == '*' || _s == '/' ||
+        _s == '(' || _s == ')');
 };
 
 template<typename ValType>
 int RPN<ValType>::GetCountVariables(string _str)
 {
-	if (_str.length() == 0)
-		return 0;
+    if (_str.length() == 0)
+        return 0;
 
-	int count = 0;
-	char* vars = new char[_str.length()];
-	memset(vars, 0, sizeof(char) * (_str.length()));
+    int count = 0;
+    char* vars = new char[_str.length() + 1];
+    memset(vars, 0, sizeof(char) * (_str.length() + 1));
 
-	for (int i = 0; i < _str.length(); i++)
-	{
-		char symbol = static_cast<char>(_str[i]);
+    for (int i = 0; i < _str.length(); i++)
+    {
+        char symbol = static_cast<char>(_str[i]);
 
-		if ((symbol != ' ') && (!IsOperation(symbol)) && (strchr(vars, symbol) == NULL))
-				vars[count++] += symbol;
-	}
+        if ((symbol != ' ') && (!IsOperation(symbol)) && (strchr(vars, symbol) == NULL))
+                vars[count++] += symbol;
+    }
 
-	return count;
+    return count;
 };
 
 template<typename ValType>
 char* RPN<ValType>::GetListOfVariables(string _str)
 {
-	if (_str.length() == 0)
-		throw Exception("Error: string is empty!");
+    int count = 0;
+    char* vars = new char[GetCountVariables(_str) + 1];
+    memset(vars, 0, sizeof(char) * (GetCountVariables(_str) + 1));
 
-	int count = 0;
-	char* vars = new char[GetCountVariables(_str)];
-	memset(vars, 0, sizeof(char) * (GetCountVariables(_str)));
+    for (int i = 0; i < _str.length(); i++)
+    {
+        char symbol = static_cast<char>(_str[i]);
 
-	for (int i = 0; i < _str.length(); i++)
-	{
-		char symbol = static_cast<char>(_str[i]);
+        if ((symbol != ' ') && (!IsOperation(symbol)) && (strchr(vars, symbol) == NULL))
+            vars[count++] += symbol;
+    }
 
-		if ((symbol != ' ') && (!IsOperation(symbol)) && (strchr(vars, symbol) == NULL))
-			vars[count++] += symbol;
-	}
-
-	return vars;
+    return vars;
 }
 
 template<typename ValType>
 string RPN<ValType>::CreateRPN(string _str)
 {
-	if (_str.length() == 0)
-		throw Exception("Error: String is empty!");
+    if (_str.length() == 0)
+        throw Exception("Error: String is empty!");
 
-	TStack<char> st1(_str.length() + 1);  // operations
-	TStack<char> st2(_str.length() + 1);  // operands
+    TStack<char> st1(_str.length() + 1);  // operations
+    TStack<char> st2(_str.length() + 1);  // operands
 
-	for (int i = 0; i < _str.length(); i++)
-	{
-		char symbol = static_cast<char>(_str[i]);
+    for (int i = 0; i < _str.length(); i++)
+    {
+        char symbol = static_cast<char>(_str[i]);
 
-		if (symbol == ' ')
-			continue;
+        if (symbol == ' ')  // space processing
+            continue;
 
-		if (IsOperation(symbol))
-		{
-			if (symbol == '(')
-			{
-				st1.Push(symbol);
-				continue;
-			}
+        if (IsOperation(symbol))  // operation processing
+        {
+            if (symbol == '(')
+            {
+                st1.Push(symbol);
+                continue;
+            }
 
-			if (symbol == ')')
-			{
-				while (st1.TopWatch() != '(')
-					st2.Push(st1.Pop());
+            if (symbol == ')')
+            {
+                while (st1.TopWatch() != '(')
+                    st2.Push(st1.Pop());
 
-				st1.Pop(); // delete '('
-				continue;
-			}
+                st1.Pop(); // delete '('
+                continue;
+            }
 
-			if ((st1.IsEmpty()) || (GetPriority(symbol) >= GetPriority(st1.TopWatch())))
-			{
-				st1.Push(symbol);
-				continue;
-			}
+            if ((st1.IsEmpty()) || (GetPriority(symbol) >= GetPriority(st1.TopWatch())))
+            {
+                st1.Push(symbol);
+                continue;
+            }
 
-			while((!st1.IsEmpty()) && (GetPriority(symbol) <= GetPriority(st1.TopWatch())))
-				st2.Push(st1.Pop());
+            while((!st1.IsEmpty()) && (GetPriority(symbol) <= GetPriority(st1.TopWatch())))
+                st2.Push(st1.Pop());
 
-			st1.Push(symbol);
-			continue;
-		}
+            st1.Push(symbol);
+            continue;
+        }
 
-		st2.Push(symbol);
-	}
+        if (isalpha(symbol))  // variable processing
+        {
+            st2.Push(symbol);
+            continue;
+        }
 
-	while (!st1.IsEmpty())
-		st2.Push(st1.Pop());
+        throw Exception("Error: The symbols are not correct in string!");  // no operation, no space, no letter
+    }
 
-	string rpn(st2.GetSize(), 0);
+    while (!st1.IsEmpty())
+    {
+        char tmp = st1.Pop();
+        st2.Push(tmp);
+    }
 
-	while (!st2.IsEmpty())
-	{
-		rpn[st2.GetSize() - 1] = st2.TopWatch();
-		st2.Pop();
-	}
+    string rpn(st2.GetSize(), 0);
 
-	return rpn;
+    while (!st2.IsEmpty())
+    {
+        rpn[st2.GetSize() - 1] = st2.TopWatch();
+        st2.Pop();
+    }
+
+    return rpn;
 };
 
 template<typename ValType>
 double RPN<ValType>::CalculateRPN(string _str, TCouple<ValType>* _data, int _countData)
 {
-	if (_str.length() == 0)
-		throw Exception("Error: String is empty!");
+    if (_str.length() == 0)
+        throw Exception("Error: String is empty!");
 
-	TStack<double> value(_str.length());
+    TStack<double> value(_str.length());
 
-	for (int i = 0; i < _str.length(); i++)
-	{
-		if (!IsOperation(static_cast<char>(_str[i])))
-		{
-			for (int j = 0; j < _countData; j++)
-			{
-				if (_data[j].var == static_cast<char>(_str[i]))
-				{
-					value.Push(static_cast<double>(_data[j].value));
-					break;
-				}
-			}
+    for (int i = 0; i < _str.length(); i++)
+    {
+        char symbol = static_cast<char>(_str[i]);
 
-			continue;
-		}
+        if (!IsOperation(symbol))
+        {
+            for (int j = 0; j < _countData; j++)
+            {
+                if (_data[j].var == symbol)
+                {
+                    value.Push(static_cast<double>(_data[j].value));
+                    break;
+                }
+            }
 
-		double rightOperand = value.Pop();
-		double leftOperand = value.Pop();
-		double res = 0;
+            continue;
+        }
 
-		if (static_cast<char>(_str[i]) == '+')
-			res = leftOperand + rightOperand;
-		if (static_cast<char>(_str[i]) == '-')
-			res = leftOperand - rightOperand;
-		if (static_cast<char>(_str[i]) == '*')
-			res = leftOperand * rightOperand;
-		if (static_cast<char>(_str[i]) == '/')
-			res = leftOperand / rightOperand;
+        double rightOperand = value.Pop();
+        double leftOperand = value.Pop();
+        double res = 0;
 
-		value.Push(res);
-	}
+        switch (symbol)
+        {
+        case '+':
+            res = leftOperand + rightOperand;
+            break;
+        case '-':
+            res = leftOperand - rightOperand;
+            break;
+        case '*':
+            res = leftOperand * rightOperand;
+            break;
+        case '/':
+            if (rightOperand == 0)
+                throw Exception("Error: Division by zero!");
+            res = leftOperand / rightOperand;
+            break;
+        }
 
-	return value.Pop();
+        value.Push(res);
+    }
+
+    return value.Pop();
 };
 
 #endif
