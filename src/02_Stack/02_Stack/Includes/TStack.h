@@ -22,7 +22,7 @@ public:
 
     void Push(ValType);
     ValType Pop();
-    ValType TopWatch();
+    ValType TopWatch() const;
 
     int GetSize() const;
 };
@@ -87,7 +87,7 @@ ValType TStack<ValType>::Pop()
 };
 
 template<typename ValType>
-ValType TStack<ValType>::TopWatch()
+ValType TStack<ValType>::TopWatch() const
 {
     if (IsEmpty())
         throw Exception("Error: stack is empty!");
