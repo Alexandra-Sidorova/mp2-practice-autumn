@@ -20,18 +20,20 @@ void main()
         string rpn = RPN<double>::CreateRPN(str);
         cout << "Reverse Polish Notation: " << rpn << endl;
 
+		int countVariables = RPN<double>::GetCountVariables(str);
+
         cout << "Enter variables and its values: " << endl;
-        TCouple<double>* data = new TCouple<double>[RPN<double>::GetCountVariables(str)];
+        TCouple<double>* data = new TCouple<double>[countVariables];
 
         char* variables = RPN<double>::GetListOfVariables(str);
-        for (int i = 0; i < RPN<double>::GetCountVariables(str); i++)
+        for (int i = 0; i < countVariables; i++)
         {
             data[i].var = variables[i];
             cout << "Variable " << variables[i] << " : ";
             cin >> data[i].value;
         }
 
-        double result = RPN<double>::CalculateRPN(rpn, data, RPN<double>::GetCountVariables(str));
+        double result = RPN<double>::CalculateRPN(rpn, data, countVariables);
         cout << "Result: " << result;
         //char str[] = "A + B   * (C -D)/(F+E)+K";
     }
