@@ -10,14 +10,11 @@ public:
     char var;
     ValType value;
 
-    TCouple();
+    TCouple()
+    {
+        var = 0;
+        value = 0;
+    }
 };
-
-template<typename ValType>
-TCouple<ValType>::TCouple()
-{
-    var = 0;
-    value = 0;
-}
 
 #endif

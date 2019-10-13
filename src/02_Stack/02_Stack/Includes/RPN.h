@@ -16,10 +16,10 @@ class RPN
 private:
     static int GetPriority(const char);
     static bool IsOperation(const char);
+    static void GetCountAndListOfVariables(int&, string&);
 
 public:
-    static int GetCountVariables(string);
-    static char* GetListOfVariables(string);
+    static TCouple<ValType>* SetDataOfVariables(string, int&);
     static string CreateRPN(string);
     static double CalculateRPN(string, TCouple<ValType>*, int);
 };
@@ -56,42 +56,41 @@ bool RPN<ValType>::IsOperation(const char _s)
 };
 
 template<typename ValType>
-int RPN<ValType>::GetCountVariables(string _str)
+void RPN<ValType>::GetCountAndListOfVariables(int& _count, string& _str)
 {
-    if (_str.length() == 0)
-        return 0;
-
-    int count = 0;
-    char* vars = new char[_str.length() + 1];
-    memset(vars, 0, sizeof(char) * (_str.length() + 1));
+    string uniqueVariables;
+    _count = 0;
 
     for (int i = 0; i < _str.length(); i++)
     {
         char symbol = static_cast<char>(_str[i]);
 
-        if ((symbol != ' ') && (!IsOperation(symbol)) && (strchr(vars, symbol) == NULL))
-                vars[count++] += symbol;
+        if ((symbol != ' ') && (!IsOperation(symbol)) && (uniqueVariables.find(symbol) == string::npos))
+        {
+            uniqueVariables += symbol;
+            _count++;
+        }
     }
 
-    return count;
+    _str = uniqueVariables;
 };
 
 template<typename ValType>
-char* RPN<ValType>::GetListOfVariables(string _str)
+TCouple<ValType>* RPN<ValType>::SetDataOfVariables(string _str, int& _countData)
 {
-    int count = 0;
-    char* vars = new char[GetCountVariables(_str) + 1];
-    memset(vars, 0, sizeof(char) * (GetCountVariables(_str) + 1));
+    _countData = 0;
+    GetCountAndListOfVariables(_countData, _str);
 
-    for (int i = 0; i < _str.length(); i++)
+    TCouple<ValType>* data = new TCouple<ValType>[_countData];
+
+    for (int i = 0; i < _countData; i++)
     {
-        char symbol = static_cast<char>(_str[i]);
-
-        if ((symbol != ' ') && (!IsOperation(symbol)) && (strchr(vars, symbol) == NULL))
-            vars[count++] += symbol;
+        data[i].var = _str[i];
+        cout << "Variable " << _str[i] << " : ";
+        cin >> data[i].value;
     }
 
-    return vars;
+    return data;
 }
 
 template<typename ValType>
@@ -121,7 +120,10 @@ string RPN<ValType>::CreateRPN(string _str)
             if (symbol == ')')
             {
                 while (st1.TopWatch() != '(')
-                    st2.Push(st1.Pop());
+                {
+                    st2.Push(st1.TopWatch());
+                    st1.Pop();
+                }
 
                 st1.Pop(); // delete '('
                 continue;
@@ -134,7 +136,10 @@ string RPN<ValType>::CreateRPN(string _str)
             }
 
             while((!st1.IsEmpty()) && (GetPriority(symbol) <= GetPriority(st1.TopWatch())))
-                st2.Push(st1.Pop());
+            {
+                st2.Push(st1.TopWatch());
+                st1.Pop();
+            }
 
             st1.Push(symbol);
             continue;
@@ -151,17 +156,20 @@ string RPN<ValType>::CreateRPN(string _str)
 
     while (!st1.IsEmpty())
     {
-        char tmp = st1.Pop();
-        st2.Push(tmp);
+        st2.Push(st1.TopWatch());
+        st1.Pop();
     }
 
-    string rpn(st2.GetSize(), 0);
+    string rpn;
 
     while (!st2.IsEmpty())
     {
-        rpn[st2.GetSize() - 1] = st2.TopWatch();
+        rpn += st2.TopWatch();
         st2.Pop();
     }
+
+    for (int i = 0; i < (rpn.length() / 2); i++)  // reverse rpn
+        swap(rpn[i], rpn[rpn.length() - 1 - i]);
 
     return rpn;
 };
@@ -192,8 +200,12 @@ double RPN<ValType>::CalculateRPN(string _str, TCouple<ValType>* _data, int _cou
             continue;
         }
 
-        double rightOperand = value.Pop();
-        double leftOperand = value.Pop();
+        double rightOperand = value.TopWatch();
+        value.Pop();
+
+        double leftOperand = value.TopWatch();
+        value.Pop();
+
         double res = 0;
 
         switch (symbol)
@@ -217,7 +229,7 @@ double RPN<ValType>::CalculateRPN(string _str, TCouple<ValType>* _data, int _cou
         value.Push(res);
     }
 
-    return value.Pop();
+    return value.TopWatch();
 };
 
 #endif

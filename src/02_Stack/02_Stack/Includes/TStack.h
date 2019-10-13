@@ -21,10 +21,8 @@ public:
     bool IsFull() const;
 
     void Push(ValType);
-    ValType Pop();
+    void Pop();
     ValType TopWatch() const;
-
-    int GetSize() const;
 };
 
 //----------------------------------------------------
@@ -78,12 +76,12 @@ void TStack<ValType>::Push(ValType _object)
 };
 
 template<typename ValType>
-ValType TStack<ValType>::Pop()
+void TStack<ValType>::Pop()
 {
     if (IsEmpty())
         throw Exception("Error: stack is empty!");
 
-    return (elem[--top]);
+    top--;
 };
 
 template<typename ValType>
@@ -94,11 +92,5 @@ ValType TStack<ValType>::TopWatch() const
 
     return (elem[top - 1]);
 };
-
-template<typename ValType>
-int TStack<ValType>::GetSize() const
-{
-    return top;
-}
 
 #endif
