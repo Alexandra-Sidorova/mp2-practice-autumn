@@ -119,13 +119,25 @@ string RPN<ValType>::CreateRPN(string _str)
 
             if (symbol == ')')
             {
-                while (st1.TopWatch() != '(')
-                {
-                    st2.Push(st1.TopWatch());
-                    st1.Pop();
-                }
+				bool flag =  false;
 
-                st1.Pop(); // delete '('
+				while (!st1.IsEmpty())
+				{
+					if (st1.TopWatch() != '(')
+					{
+						st2.Push(st1.TopWatch());
+						st1.Pop();
+						continue;
+					}
+
+					st1.Pop(); // delete '('
+					flag = true;
+					break;
+				}
+
+				if(st1.IsEmpty() && !flag)
+					throw Exception("Error: Not correct the string - didn't find '('!");
+
                 continue;
             }
 

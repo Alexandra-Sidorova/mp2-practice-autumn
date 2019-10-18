@@ -30,7 +30,7 @@ public:
 template<typename ValType>
 TStack<ValType>::TStack(int _size) : size(_size)
 {
-    if (size < 0)
+    if (size <= 0)
         throw Exception("Not correct size of stack!");
 
     elem = new ValType[size];
