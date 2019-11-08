@@ -47,36 +47,59 @@ TList<TKey, TData>::TList(const TList& _copy)
 {
 	pNext = pPrev = pCurrent = NULL;
 
-	if (_copy.pFirst == NULL)
-	{
+	if (!_copy.pFirst)
 		pFirst = NULL;
-	}
 	else
 	{
 		pFirst = new TNode<TKey, TData>(*_copy.pFirst);
 		pFirst->pNext = NULL;
 		pCurrent = pFirst;
 
-		_copy.Reset();
+		TNode<TKey, TData>* iter = new TNode<TKey, TData>;
+		iter = _copy.pFirst;
 
-		while (!_copy.IsEnded())
+		while (iter->pNext)
 		{
-			_copy.Next();
-
-			pCurrent->pNext = new TNode<TKey, TData>(*_copy.pCurrent);
-
+			iter = iter->pNext;
+			pCurrent->pNext = new TNode<TKey, TData>(*iter);
+			
 			pPrev = pCurrent;
 			pCurrent = pCurrent->pNext;
 			pNext = pCurrent->pNext = NULL;
 		}
+
+		pPrev = NULL;
+		pCurrent = pFirst;
+		pNext = pFirst->pNext;
 	}
 };
 
 template<typename TKey, class TData>
 TList<TKey, TData>::TList(const TNode<TKey, TData>* _node)
 {
-	pFirst = pCurrent = _node;
-	pPrev = pNext = NULL;
+	pNext = pPrev = pCurrent = NULL;
+
+	if (!_node)
+		pFirst = NULL;
+	else
+	{
+		TNode<TKey, TData>* node = new TNode<TKey, TData>(*_node);
+		pFirst = node;
+
+		TNode<TKey, TData>* iter = _node->pNext;
+		TNode<TKey, TData>* prev = pFirst;
+
+		while (iter)
+		{
+			TNode<TKey, TData>* tmp = new TNode<TKey, TData>(*iter);
+			prev->pNext = tmp;
+			prev = tmp;
+			iter = iter->pNext;
+		}
+
+		pCurrent = pFirst;
+		pNext = pCurrent->pNext;
+	}
 };
 
 template<typename TKey, class TData>
@@ -100,7 +123,10 @@ void TList<TKey, TData>::Reset()
 {
 	pPrev = NULL;
 	pCurrent = pFirst;
-	pNext = pCurrent->pNext;
+	if (pFirst)
+		pNext = pCurrent->pNext;
+	else
+		pNext = NULL;
 };
 
 template<typename TKey, class TData>
@@ -125,136 +151,253 @@ bool TList<TKey, TData>::IsEnded() const
 template<typename TKey, class TData>
 TNode<TKey, TData>* TList<TKey, TData>::Search(TKey _key)
 {
+	TNode<TKey, TData>* tmppCurrent = pCurrent;
+	TNode<TKey, TData>* tmppNext = pNext;
+	TNode<TKey, TData>* tmppPrev = pPrev;
+
 	this->Reset();
 
 	while (!this->IsEnded())
 	{
 		if (_key == pCurrent->key)
-			return pCurrent;
+		{
+			TNode<TKey, TData>* findNode = pCurrent;
+			pCurrent = tmppCurrent;
+			pNext = tmppNext;
+			pPrev = tmppPrev;
+
+			return findNode;
+		}
 
 		this->Next();
 	}
 
-	this->Reset();
+	pCurrent = tmppCurrent;
+	pNext = tmppNext;
+	pPrev = tmppPrev;
+
 	return NULL;
 };
 
 template<typename TKey, class TData>
 void TList<TKey, TData>::PopBegin(TKey _key, TData* _data)
 {
-	if (!(this->pCurrent == NULL))
-		this->Reset();
-
 	TNode<TKey, TData>* newNode = new TNode<TKey, TData>(_key, _data, pFirst);
-	pNext = pFirst;
-	pFirst = newNode;
-	pCurrent = pFirst;
+	
+	if (pCurrent == pFirst)
+		pPrev = newNode;
 
-	this->Reset();
+	pFirst = newNode;
 };
 
 template<typename TKey, class TData>
 void TList<TKey, TData>::PopEnd(TKey _key, TData* _data)
 {
+	TNode<TKey, TData>* tmppCurrent = pCurrent;
+	TNode<TKey, TData>* tmppNext = pNext;
+	TNode<TKey, TData>* tmppPrev = pPrev;
+
 	this->Reset();
 
 	while (pNext)
 		this->Next();
 
 	TNode<TKey, TData>* newNode = new TNode<TKey, TData>(_key, _data);
-	pCurrent->pNext = newNode;
+	
+	if (!pFirst)
+		pFirst = newNode;
+	else
+		pCurrent->pNext = newNode;
 
-	this->Reset();
+	if (tmppCurrent == pCurrent)
+		pNext = newNode;
+	else
+		pNext = tmppNext;
+
+	pCurrent = tmppCurrent;
+	pPrev = tmppPrev;
 };
 
 template<typename TKey, class TData>
 void TList<TKey, TData>::PopBefore(TKey _superKey, TKey _key, TData* _data)
 {
+	TNode<TKey, TData>* tmppCurrent = pCurrent;
+	TNode<TKey, TData>* tmppNext = pNext;
+	TNode<TKey, TData>* tmppPrev = pPrev;
+
 	this->Reset();
 
-	if (this->IsEnded())
+	if ((this->IsEnded()) || (pFirst->key == _superKey))
 	{
 		this->PopBegin(_key, _data);
+		pCurrent = pFirst;
 		return;
 	}
 
 	TNode<TKey, TData>* nodeFind = Search(_superKey);
 
-	if (nodeFind != NULL)
+	if (!nodeFind)
 	{
-		TNode<TKey, TData>* newNode = new TNode<TKey, TData>(_key, _data, pCurrent);
-		pNext = pCurrent;
-		pPrev->pNext = newNode;
-		pCurrent = newNode;
-
-		this->Reset();
+		throw Exception("Error: key didn't find!");
 		return;
 	}
 
-	this->Reset();
-	throw Exception("Error: key didn't find!");
+	while (pCurrent != nodeFind)
+		this->Next();
+
+	TNode<TKey, TData>* newNode = new TNode<TKey, TData>(_key, _data, pCurrent);
+	pPrev->pNext = newNode;
+
+	if (tmppCurrent == pPrev)
+		pNext = newNode;
+	else
+		pNext = tmppNext;
+
+	if (tmppCurrent == pCurrent)
+		pPrev = newNode;
+	else
+		pPrev = tmppPrev;
+		
+	pCurrent = tmppCurrent;
 };
 
 template<typename TKey, class TData>
 void TList<TKey, TData>::PopAfter(TKey _superKey, TKey _key, TData* _data)
 {
+	TNode<TKey, TData>* tmppCurrent = pCurrent;
+	TNode<TKey, TData>* tmppNext = pNext;
+	TNode<TKey, TData>* tmppPrev = pPrev;
+
 	this->Reset();
 
 	TNode<TKey, TData>* nodeFind = Search(_superKey);
 
-	if (nodeFind != NULL)
+	if (!nodeFind)
 	{
-		TNode<TKey, TData>* newNode = new TNode<TKey, TData>(_key, _data, pNext);
-		pCurrent->pNext = newNode;
-		pPrev = pCurrent;
-		pCurrent = newNode;
-
-		this->Reset();
+		throw Exception("Error: key didn't find!");
 		return;
 	}
 
-	this->Reset();
-	throw Exception("Error: key didn't find!");
+	while (pCurrent != nodeFind)
+		this->Next();
+
+	TNode<TKey, TData>* newNode = new TNode<TKey, TData>(_key, _data, pNext);
+	pCurrent->pNext = newNode;
+		
+	if (tmppCurrent == pCurrent)
+		pNext = newNode;
+	else
+		pNext = tmppNext;
+
+	if (tmppCurrent == pNext)
+		pPrev = newNode;
+	else
+		pPrev = tmppPrev;
+
+	pCurrent = tmppCurrent;		
 };
 
 template<typename TKey, class TData>
 void TList<TKey, TData>::Delete(TKey _key)
 {
-	this->Reset();
-
 	if (!pFirst)
-	{
-		this->Reset();
 		throw Exception("Error: list is empty!");
-	}
 
 	if (pFirst->key == _key)
 	{
-		delete pFirst;
-		pFirst = pNext;
+		if (pCurrent == pFirst)
+		{
+			pCurrent = pNext;
+			pNext = pNext->pNext;
+
+			delete pFirst;
+			pFirst = pCurrent;
+
+			return;
+		}
+
+		if (pCurrent == pFirst->pNext)
+		{
+			pPrev = NULL;
+
+			delete pFirst;
+			pFirst = pCurrent;
+
+			return;
+		}
 		
-		this->Reset();
+		delete pFirst;
+
 		return;
 	}
+
+	TNode<TKey, TData>* tmppCurrent = pCurrent;
+	TNode<TKey, TData>* tmppPrev = pPrev;
+	TNode<TKey, TData>* tmppNext = pNext;
+
+	this->Reset();
 
 	TNode<TKey, TData>* nodeFind = Search(_key);
 
-	if (nodeFind != NULL)
+	if (!nodeFind)
 	{
-		pPrev->pNext = pNext;
-		delete nodeFind;
-		
-		this->Reset();
+		throw Exception("Error: key didn't find!");
 		return;
 	}
 
-	this->Reset();
-	throw Exception("Error: key didn't find!");
+	while (pCurrent != nodeFind)
+		this->Next();
+
+	pPrev->pNext = pNext;
+		
+	if (tmppCurrent == pCurrent)
+	{
+		pCurrent = tmppNext;
+		pNext = pCurrent->pNext;
+		delete nodeFind;
+
+		return;
+	}
+
+	if (tmppCurrent == pPrev)
+	{
+		pCurrent = pPrev;
+		pPrev = tmppPrev;
+		pNext = pCurrent->pNext;
+		delete nodeFind;
+
+		return;
+	}
+
+	if (tmppCurrent == pNext)
+	{
+		pCurrent = pNext;
+		pNext = pCurrent->pNext;
+		delete nodeFind;
+
+		return;
+	}
+
+	pNext = tmppCurrent->pNext;
+	pCurrent = tmppCurrent;
+	delete nodeFind;
+
+	return;
 };
 
 template<typename TKey, class TData>
 void TList<TKey, TData>::Print()
 {
+	if (!pFirst)
+	{
+		cout << "List is empty!" << endl;
+		return;
+	}
+
+	TNode<TKey, TData>* tmppCurrent = pCurrent;
+	TNode<TKey, TData>* tmppNext = pNext;
+	TNode<TKey, TData>* tmppPrev = pPrev;
+
 	this->Reset();
 
 	while (!this->IsEnded())
@@ -262,6 +405,12 @@ void TList<TKey, TData>::Print()
 		cout << this->pCurrent->key << " ";
 		this->Next();
 	}
+
+	cout << endl;
+
+	pCurrent = tmppCurrent;
+	pNext = tmppNext;
+	pPrev = tmppPrev;
 }
 
 #endif

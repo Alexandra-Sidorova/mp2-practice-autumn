@@ -2,16 +2,18 @@
 #define _TARRAYSTACK_H
 
 #include "exceptions.h"
+#include "TStack.h"
 
 using namespace std;
 
 template<typename ValType>
-class TArrayStack
+class TArrayStack : TStack<ValType>
 {
 private:
     int size;
     int top;
     ValType* elem;
+
 public:
     TArrayStack(int);
     TArrayStack(const TArrayStack<ValType>&);
@@ -24,7 +26,6 @@ public:
     void Pop();
     ValType TopWatch() const;
 };
-
 //----------------------------------------------------
 
 template<typename ValType>
@@ -53,6 +54,7 @@ TArrayStack<ValType>::~TArrayStack()
     top = 0;
     delete[] elem;
 };
+//----------------------------------------------------
 
 template<typename ValType>
 bool TArrayStack<ValType>::IsEmpty() const
@@ -65,6 +67,7 @@ bool TArrayStack<ValType>::IsFull() const
 {
     return(top == size);
 };
+//----------------------------------------------------
 
 template<typename ValType>
 void TArrayStack<ValType>::Push(ValType _object)
