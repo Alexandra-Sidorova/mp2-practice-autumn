@@ -24,6 +24,7 @@ public:
 	void Reset();
 	void Next();
 	bool IsEnded() const;
+	TNode<TKey, TData>* GetpFirst() const;
 
 	TNode<TKey, TData>* Search(TKey);
 	void PopBegin(TKey, TData*);
@@ -145,6 +146,12 @@ template<typename TKey, class TData>
 bool TList<TKey, TData>::IsEnded() const
 {
 	return (pCurrent == NULL);
+};
+
+template<typename TKey, class TData>
+TNode<TKey, TData>* TList<TKey, TData>::GetpFirst() const
+{
+	return pFirst;
 };
 //-----------------------------------------------------------------
 
@@ -308,7 +315,10 @@ void TList<TKey, TData>::Delete(TKey _key)
 		if (pCurrent == pFirst)
 		{
 			pCurrent = pNext;
-			pNext = pNext->pNext;
+			if (pNext)
+				pNext = pNext->pNext;
+			else
+				pNext = NULL;
 
 			delete pFirst;
 			pFirst = pCurrent;
@@ -411,6 +421,6 @@ void TList<TKey, TData>::Print()
 	pCurrent = tmppCurrent;
 	pNext = tmppNext;
 	pPrev = tmppPrev;
-}
+};
 
 #endif

@@ -1,33 +1,42 @@
-#ifndef _RPN_H_
-#define _RPN_H_
+#ifndef _ALGORITHMS_H_
+#define _ALGORITHMS_H_
 
 #include "TStack.h"
+#include "TListStack.h"
+#include "TArrayStack.h"
 #include "TCouple.h"
 #include "exceptions.h"
 
 #include <cstring>
 #include <cctype>
 
+#define SIZE_STACK 64
+
 using namespace std;
 
 template<typename ValType>
-class RPN
+class Algorithms
 {
 private:
-    static int GetPriority(const char);
-    static bool IsOperation(const char);
-    static void GetCountAndListOfVariables(int&, string&);
+	TStack<char>* stackOperations; // 1
+	TStack<char>* stackOperands;  // 2
+	TStack<ValType>* stackResults;
+
+    int GetPriority(const char);
+	bool IsOperation(const char);
+	void GetCountAndListOfVariables(int&, string&);
 
 public:
-    static TCouple<ValType>* SetDataOfVariables(string, int&);
-    static string CreateRPN(string);
-    static double CalculateRPN(string, TCouple<ValType>*, int);
-};
+	Algorithms(typeStack);
 
+    TCouple<ValType>* SetDataOfVariables(string, int&);
+    string CreateRPN(string);
+    double CalculateRPN(string, TCouple<ValType>*, int);
+};
 //-----------------------------------------------------------
 
 template<typename ValType>
-int RPN<ValType>::GetPriority(const char _oper)
+int Algorithms<ValType>::GetPriority(const char _oper)
 {
     switch (_oper)
     {
@@ -49,14 +58,14 @@ int RPN<ValType>::GetPriority(const char _oper)
 };
 
 template<typename ValType>
-bool RPN<ValType>::IsOperation(const char _s)
+bool Algorithms<ValType>::IsOperation(const char _s)
 {
     return (_s == '+' || _s == '-' || _s == '*' || _s == '/' ||
         _s == '(' || _s == ')');
 };
 
 template<typename ValType>
-void RPN<ValType>::GetCountAndListOfVariables(int& _count, string& _str)
+void Algorithms<ValType>::GetCountAndListOfVariables(int& _count, string& _str)
 {
     string uniqueVariables;
     _count = 0;
@@ -74,9 +83,28 @@ void RPN<ValType>::GetCountAndListOfVariables(int& _count, string& _str)
 
     _str = uniqueVariables;
 };
+//-----------------------------------------------------------
+template<typename ValType>
+Algorithms<ValType>::Algorithms(typeStack _type)
+{
+	switch (_type)
+	{
+	case (arrayStack):
+		stackOperations = new TArrayStack<char>(SIZE_STACK);
+		stackOperands = new TArrayStack<char>(SIZE_STACK);
+		stackResults = new TArrayStack<double>(SIZE_STACK);
+		break;
+	case(listStack):
+		stackOperations = new TListStack<char>;
+		stackOperands = new TListStack<char>;
+		stackResults = new TListStack<double>;
+		break;
+	}
+};
+//-----------------------------------------------------------
 
 template<typename ValType>
-TCouple<ValType>* RPN<ValType>::SetDataOfVariables(string _str, int& _countData)
+TCouple<ValType>* Algorithms<ValType>::SetDataOfVariables(string _str, int& _countData)
 {
     _countData = 0;
     GetCountAndListOfVariables(_countData, _str);
@@ -94,13 +122,10 @@ TCouple<ValType>* RPN<ValType>::SetDataOfVariables(string _str, int& _countData)
 }
 
 template<typename ValType>
-string RPN<ValType>::CreateRPN(string _str)
+string Algorithms<ValType>::CreateRPN(string _str)
 {
     if (_str.length() == 0)
         throw Exception("Error: String is empty!");
-
-    TStack<char> st1(_str.length() + 1);  // operations
-    TStack<char> st2(_str.length() + 1);  // operands
 
     for (int i = 0; i < _str.length(); i++)
     {
@@ -113,7 +138,7 @@ string RPN<ValType>::CreateRPN(string _str)
         {
             if (symbol == '(')
             {
-                st1.Push(symbol);
+				stackOperations->Push(symbol);
                 continue;
             }
 
@@ -121,63 +146,63 @@ string RPN<ValType>::CreateRPN(string _str)
             {
 				bool flag =  false;
 
-				while (!st1.IsEmpty())
+				while (!stackOperations->IsEmpty())
 				{
-					if (st1.TopWatch() != '(')
+					if (stackOperations->TopWatch() != '(')
 					{
-						st2.Push(st1.TopWatch());
-						st1.Pop();
+						stackOperands->Push(stackOperations->TopWatch());
+						stackOperations->Pop();
 						continue;
 					}
 
-					st1.Pop(); // delete '('
+					stackOperations->Pop(); // delete '('
 					flag = true;
 					break;
 				}
 
-				if(st1.IsEmpty() && !flag)
+				if(stackOperations->IsEmpty() && !flag)
 					throw Exception("Error: Not correct the string - didn't find '('!");
 
                 continue;
             }
 
-            if ((st1.IsEmpty()) || (GetPriority(symbol) >= GetPriority(st1.TopWatch())))
+            if ((stackOperations->IsEmpty()) || (GetPriority(symbol) >= GetPriority(stackOperations->TopWatch())))
             {
-                st1.Push(symbol);
+				stackOperations->Push(symbol);
                 continue;
             }
 
-            while((!st1.IsEmpty()) && (GetPriority(symbol) <= GetPriority(st1.TopWatch())))
+            while((!stackOperations->IsEmpty()) && (GetPriority(symbol) <= GetPriority(stackOperations->TopWatch())))
             {
-                st2.Push(st1.TopWatch());
-                st1.Pop();
+				stackOperands->Push(stackOperations->TopWatch());
+				stackOperations->Pop();
             }
 
-            st1.Push(symbol);
+			stackOperations->Push(symbol);
             continue;
         }
 
         if (isalpha(symbol))  // variable processing
         {
-            st2.Push(symbol);
+			stackOperands->Push(symbol);
             continue;
         }
 
         throw Exception("Error: The symbols are not correct in string!");  // no operation, no space, no letter
     }
 
-    while (!st1.IsEmpty())
+    while (!stackOperations->IsEmpty())
     {
-        st2.Push(st1.TopWatch());
-        st1.Pop();
+		stackOperands->Push(stackOperations->TopWatch());
+		stackOperations->Pop();
     }
 
     string rpn;
 
-    while (!st2.IsEmpty())
+    while (!stackOperands->IsEmpty())
     {
-        rpn += st2.TopWatch();
-        st2.Pop();
+        rpn += stackOperands->TopWatch();
+		stackOperands->Pop();
     }
 
     for (int i = 0; i < (rpn.length() / 2); i++)  // reverse rpn
@@ -187,12 +212,10 @@ string RPN<ValType>::CreateRPN(string _str)
 };
 
 template<typename ValType>
-double RPN<ValType>::CalculateRPN(string _str, TCouple<ValType>* _data, int _countData)
+double Algorithms<ValType>::CalculateRPN(string _str, TCouple<ValType>* _data, int _countData)
 {
     if (_str.length() == 0)
         throw Exception("Error: String is empty!");
-
-    TStack<double> value(_str.length());
 
     for (int i = 0; i < _str.length(); i++)
     {
@@ -204,7 +227,7 @@ double RPN<ValType>::CalculateRPN(string _str, TCouple<ValType>* _data, int _cou
             {
                 if (_data[j].var == symbol)
                 {
-                    value.Push(static_cast<double>(_data[j].value));
+					stackResults->Push(static_cast<double>(_data[j].value));
                     break;
                 }
             }
@@ -212,11 +235,11 @@ double RPN<ValType>::CalculateRPN(string _str, TCouple<ValType>* _data, int _cou
             continue;
         }
 
-        double rightOperand = value.TopWatch();
-        value.Pop();
+        double rightOperand = stackResults->TopWatch();
+		stackResults->Pop();
 
-        double leftOperand = value.TopWatch();
-        value.Pop();
+        double leftOperand = stackResults->TopWatch();
+		stackResults->Pop();
 
         double res = 0;
 
@@ -238,10 +261,10 @@ double RPN<ValType>::CalculateRPN(string _str, TCouple<ValType>* _data, int _cou
             break;
         }
 
-        value.Push(res);
+		stackResults->Push(res);
     }
 
-    return value.TopWatch();
+    return stackResults->TopWatch();
 };
 
 #endif
