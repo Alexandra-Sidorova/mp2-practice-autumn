@@ -34,9 +34,9 @@ TListStack<ValType>::TListStack()
 };
 
 template<typename ValType>
-TListStack<ValType>::TListStack(const TListStack& _copy)
+TListStack<ValType>::TListStack(const TListStack<ValType>& _copy)
 {
-	elem = _copy.elem;
+	elem = new TList<ValType>(_copy.elem);
 };
 
 template<typename ValType>
@@ -55,29 +55,9 @@ bool TListStack<ValType>::IsEmpty() const
 template<typename ValType>
 bool TListStack<ValType>::IsFull() const
 {
-	TList<ValType, ValType> listCheck(this->elem->GetpFirst());
-
-	int size = 0, checkSize = 0;
-
-	while (!listCheck.IsEnded())
-	{
-		listCheck.Next();
-		size++;
-	}
-
-	listCheck.PopEnd(0, NULL);
-	listCheck.Reset();
-
-	while (!listCheck.IsEnded())
-	{
-		listCheck.Next();
-		checkSize++;
-	}
-
-	if (checkSize == (size + 1))
-		return false;
-
-	return true;
+	TNode<ValType, ValType>* newNode = new TNode<ValType, ValType>();
+	
+	return !newNode;
 };
 //----------------------------------------------------
 
@@ -108,6 +88,6 @@ ValType TListStack<ValType>::TopWatch() const
 		throw Exception("Error: stack is empty!");
 
 	return elem->GetpFirst()->key;
-}
+};
 
 #endif

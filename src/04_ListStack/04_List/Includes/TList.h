@@ -33,7 +33,7 @@ public:
 	void PopAfter(TKey, TKey, TData*);
 	void Delete(TKey);
 
-	template<typename TKey, class TData> friend ostream& operator<<(ostream&, TList<TKey, TData>&);
+	template<typename TKey, class TData> friend ostream& operator<<(ostream&, TList<TKey,TData>&);
 };
 //-----------------------------------------------------------------
 
@@ -63,7 +63,7 @@ TList<TKey, TData>::TList(const TList& _copy)
 		{
 			iter = iter->pNext;
 			pCurrent->pNext = new TNode<TKey, TData>(*iter);
-
+			
 			pPrev = pCurrent;
 			pCurrent = pCurrent->pNext;
 			pNext = pCurrent->pNext = NULL;
@@ -190,7 +190,7 @@ template<typename TKey, class TData>
 void TList<TKey, TData>::PopBegin(TKey _key, TData* _data)
 {
 	TNode<TKey, TData>* newNode = new TNode<TKey, TData>(_key, _data, pFirst);
-
+	
 	if (pCurrent == pFirst)
 		pPrev = newNode;
 
@@ -210,7 +210,7 @@ void TList<TKey, TData>::PopEnd(TKey _key, TData* _data)
 		this->Next();
 
 	TNode<TKey, TData>* newNode = new TNode<TKey, TData>(_key, _data);
-
+	
 	if (!pFirst)
 		pFirst = newNode;
 	else
@@ -264,7 +264,7 @@ void TList<TKey, TData>::PopBefore(TKey _superKey, TKey _key, TData* _data)
 		pPrev = newNode;
 	else
 		pPrev = tmppPrev;
-
+		
 	pCurrent = tmppCurrent;
 };
 
@@ -290,7 +290,7 @@ void TList<TKey, TData>::PopAfter(TKey _superKey, TKey _key, TData* _data)
 
 	TNode<TKey, TData>* newNode = new TNode<TKey, TData>(_key, _data, pNext);
 	pCurrent->pNext = newNode;
-
+		
 	if (tmppCurrent == pCurrent)
 		pNext = newNode;
 	else
@@ -301,7 +301,7 @@ void TList<TKey, TData>::PopAfter(TKey _superKey, TKey _key, TData* _data)
 	else
 		pPrev = tmppPrev;
 
-	pCurrent = tmppCurrent;
+	pCurrent = tmppCurrent;		
 };
 
 template<typename TKey, class TData>
@@ -335,7 +335,7 @@ void TList<TKey, TData>::Delete(TKey _key)
 
 			return;
 		}
-
+		
 		delete pFirst;
 
 		return;
@@ -359,7 +359,7 @@ void TList<TKey, TData>::Delete(TKey _key)
 		this->Next();
 
 	pPrev->pNext = pNext;
-
+		
 	if (tmppCurrent == pCurrent)
 	{
 		pCurrent = tmppNext;

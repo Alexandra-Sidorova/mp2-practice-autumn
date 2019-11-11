@@ -10,7 +10,6 @@
 #include <cstring>
 #include <cctype>
 
-#define SIZE_STACK 64
 
 using namespace std;
 
@@ -87,19 +86,9 @@ void Algorithms<ValType>::GetCountAndListOfVariables(int& _count, string& _str)
 template<typename ValType>
 Algorithms<ValType>::Algorithms(typeStack _type)
 {
-	switch (_type)
-	{
-	case (arrayStack):
-		stackOperations = new TArrayStack<char>(SIZE_STACK);
-		stackOperands = new TArrayStack<char>(SIZE_STACK);
-		stackResults = new TArrayStack<double>(SIZE_STACK);
-		break;
-	case(listStack):
-		stackOperations = new TListStack<char>;
-		stackOperands = new TListStack<char>;
-		stackResults = new TListStack<double>;
-		break;
-	}
+	stackOperations = TStack<char>::Create(_type);
+	stackOperands = TStack<char>::Create(_type);
+	stackResults = TStack<double>::Create(_type);
 };
 //-----------------------------------------------------------
 
