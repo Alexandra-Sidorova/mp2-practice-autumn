@@ -16,15 +16,14 @@ void main()
 		string choose, str;
 		getline(cin, choose);
 
-		cout << "Enter the string: ";
-		getline(cin, str);  // A + B   * (C -D)/(F+E)+K
-
 		switch (static_cast<char>(choose[0]))
 		{
 			case '0':
 			{
-				Algorithms<double> postfix(arrayStack);
+				cout << "Enter the string: ";
+				getline(cin, str);  // A + B   * (C -D)/(F+E)+K
 
+				Algorithms<double> postfix(arrayStack);
 				cout << "Converting..." << endl;
 				string rpn = postfix.CreateRPN(str);
 				cout << "Reverse Polish Notation: " << rpn << endl;
@@ -38,8 +37,10 @@ void main()
 			}
 			case '1':
 			{
-				Algorithms<double> postfix(listStack);
+				cout << "Enter the string: ";
+				getline(cin, str);  // A + B   * (C -D)/(F+E)+K
 
+				Algorithms<double> postfix(listStack);
 				cout << "Converting..." << endl;
 				string rpn = postfix.CreateRPN(str);
 				cout << "Reverse Polish Notation: " << rpn << endl;

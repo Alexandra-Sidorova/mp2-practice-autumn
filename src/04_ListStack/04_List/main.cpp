@@ -118,7 +118,7 @@ void main()
 		cout << "ListA.popBefore 9 (30): ";
 		listA.PopBefore(9, 30, NULL);
 		cout << listA;
-		cout << "ListA.popBefore 7 (1) [in begin]: ";
+		cout << "ListA.popBefore 7 (1) [begin]: ";
 		listA.PopBefore(7, 1, NULL);
 		cout << listA;
 		cout << "ListA.popBefore 29 (28): ";
@@ -143,7 +143,7 @@ void main()
 		cout << "ListA.popAfter 9 (30): ";
 		listA.PopAfter(9, 30, NULL);
 		cout << listA;
-		cout << "ListA.popAfter 10 (100) [in end]: ";
+		cout << "ListA.popAfter 10 (100) [end]: ";
 		listA.PopAfter(10, 100, NULL);
 		cout << listA;
 		cout << "ListA.popAfter 29 (28): ";
