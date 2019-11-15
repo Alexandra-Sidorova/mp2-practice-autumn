@@ -155,7 +155,7 @@ string Algorithms<ValType>::CreateRPN(string _str)
                 continue;
             }
 
-            if ((stackOperations->IsEmpty()) || (GetPriority(symbol) >= GetPriority(stackOperations->TopWatch())))
+            if ((stackOperations->IsEmpty()) || (GetPriority(symbol) > GetPriority(stackOperations->TopWatch())))
             {
 				stackOperations->Push(symbol);
                 continue;
