@@ -26,12 +26,14 @@ public:
 	void Next();
 	bool IsEnded() const;
 	TNode<int, float>* GetpFirst() const;
+	TNode<int, float>* GetpCurrent() const;
 
+	void SortData();
 	TNode<int, float>* Search(int);
-	void PopBegin(int, float);
-	void PopEnd(int, float);
-	void PopBefore(int, int, float);
-	void PopAfter(int, int, float);
+	void PushBegin(int, float);
+	void PushEnd(int, float);
+	void PushBefore(int, int, float);
+	void PushAfter(int, int, float);
 	void Delete(int);
 
 	friend ostream& operator<<(ostream& _out, TList<int, float>& _list)
@@ -50,7 +52,7 @@ public:
 
 		while (!_list.IsEnded())
 		{
-			_out << _list.pCurrent->key << " ";
+			_out << _list.pCurrent->pData << " ";
 			_list.Next();
 		}
 
@@ -173,7 +175,58 @@ TNode<int, float>* TList<int, float>::GetpFirst() const
 {
 	return pFirst;
 };
+
+TNode<int, float>* TList<int, float>::GetpCurrent() const
+{
+	return pCurrent;
+};
 //-----------------------------------------------------------------
+
+void TList<int, float>::SortData()
+{
+	TNode<int, float>* last = new TNode<int, float>;
+	TNode<int, float>* tmpfirst = new TNode<int, float>;
+	bool first = true;
+
+	while (this->pFirst)
+	{
+		TNode<int, float>* min = new TNode<int, float>;
+		min = pFirst;
+
+		while (!this->IsEnded())
+		{
+			if (pCurrent->pData < min->pData)
+				min = pCurrent;
+			this->Next();
+		}
+
+		this->Reset();
+		while ((this->pCurrent != min) && (!this->IsEnded()))
+			this->Next();
+
+		if (pCurrent == pFirst)
+			pFirst = pCurrent = pNext;
+		else if (pNext == NULL)
+			pPrev->pNext = NULL;
+		else 
+			pPrev->pNext = pNext;
+		this->Reset();
+
+		if (first)
+		{
+			tmpfirst = min;
+			first = false;
+		}
+		else last->pNext = min;
+		last = min;
+	}
+
+	last->pNext = NULL;
+	pFirst = tmpfirst;
+	pPrev = NULL;
+	pCurrent = pFirst;
+	pNext = pCurrent->pNext;
+};
 
 TNode<int, float>* TList<int, float>::Search(int _key)
 {
@@ -205,7 +258,7 @@ TNode<int, float>* TList<int, float>::Search(int _key)
 	return NULL;
 };
 
-void TList<int, float>::PopBegin(int _key, float _data)
+void TList<int, float>::PushBegin(int _key, float _data)
 {
 	TNode<int, float>* newNode = new TNode<int, float>(_key, _data, pFirst);
 
@@ -215,7 +268,7 @@ void TList<int, float>::PopBegin(int _key, float _data)
 	pFirst = newNode;
 };
 
-void TList<int, float>::PopEnd(int _key, float _data)
+void TList<int, float>::PushEnd(int _key, float _data)
 {
 	TNode<int, float>* tmppCurrent = pCurrent;
 	TNode<int, float>* tmppNext = pNext;
@@ -242,7 +295,7 @@ void TList<int, float>::PopEnd(int _key, float _data)
 	pPrev = tmppPrev;
 };
 
-void TList<int, float>::PopBefore(int _superKey, int _key, float _data)
+void TList<int, float>::PushBefore(int _superKey, int _key, float _data)
 {
 	TNode<int, float>* tmppCurrent = pCurrent;
 	TNode<int, float>* tmppNext = pNext;
@@ -252,7 +305,7 @@ void TList<int, float>::PopBefore(int _superKey, int _key, float _data)
 
 	if ((this->IsEnded()) || (pFirst->key == _superKey))
 	{
-		this->PopBegin(_key, _data);
+		this->PushBegin(_key, _data);
 		pCurrent = pFirst;
 		return;
 	}
@@ -284,7 +337,7 @@ void TList<int, float>::PopBefore(int _superKey, int _key, float _data)
 	pCurrent = tmppCurrent;
 };
 
-void TList<int, float>::PopAfter(int _superKey, int _key, float _data)
+void TList<int, float>::PushAfter(int _superKey, int _key, float _data)
 {
 	TNode<int, float>* tmppCurrent = pCurrent;
 	TNode<int, float>* tmppNext = pNext;

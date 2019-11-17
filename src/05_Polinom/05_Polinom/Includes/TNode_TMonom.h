@@ -8,7 +8,7 @@ template<>
 class TNode <int, float>
 {
 public:
-	int key;  // degree
+	int key;  // degree, 3 symbols (xyz)
 	float pData;  // coeff
 	TNode<int, float>* pNext;
 
