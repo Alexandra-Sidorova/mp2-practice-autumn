@@ -34,7 +34,7 @@ TStack<ValType>* TStack<ValType>::Create(typeStack type)
 	{
 		return new TListStack<ValType>();
 	}
-	throw "Not implemented";
+	throw Exception("Error! Type of stack is not correct!");
 };
 
 #endif 
