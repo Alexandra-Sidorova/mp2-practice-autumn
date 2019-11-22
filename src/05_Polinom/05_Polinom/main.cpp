@@ -41,6 +41,10 @@ void main()
 		min = sum - polinom;
 		cout << "min = sum - polinom: " << min;
 		cout << "sum: " << sum;
+
+		string test = "4.215z^2^ -3";
+		TPolinom politest(test);
+		cout << politest;
 	}
 	catch (Exception ex)
 	{

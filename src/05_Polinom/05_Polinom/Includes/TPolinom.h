@@ -10,8 +10,6 @@
 
 using namespace std;
 
-enum Variables {x, y, z};
-
 class TPolinom
 {
 private:
@@ -40,7 +38,7 @@ TPolinom::TPolinom()
 	monoms = new TList<int, float>();
 };
 
-TPolinom::TPolinom(const string _str)  // TODO
+TPolinom::TPolinom(const string _str)
 {
 	if (!_str.length())
 		throw Exception("Error! String is empty!");
@@ -56,6 +54,7 @@ TPolinom::TPolinom(const string _str)  // TODO
 		int degree = 0;
 		bool point = false;  // check for floating point
 		bool isdegree = false;  // check for degree
+		bool iscoeff = true;  // check for coeff
 		bool isx = false;  // check for x
 		bool isy = false;  // check for y
 		bool isz = false;  // check for z
@@ -70,16 +69,34 @@ TPolinom::TPolinom(const string _str)  // TODO
 				continue;
 			}
 
-			if (isdigit(symbol) && !point && !isdegree)
+			if (symbol == '.')
+			{
+				point = true;
+				i++;
+				continue;
+			}
+
+			if (isdigit(symbol) && iscoeff && !point && !isdegree)
 			{
 				coeff = coeff * 10 + (int)symbol - 48;  // ASCII
 				i++;
 				continue;
 			}
 
-			if (isdigit(symbol) && point && !isdegree)
+			if (isdigit(symbol) && iscoeff && point && !isdegree)
 			{
-				coeff = coeff + ((int)symbol - 48) * 0.1;  // ASCII
+				int tmp = (int)coeff;
+				float tmpcoeff = coeff;
+				float ex = ((int)symbol - 48) / 10.;  // ASCII
+
+				while (tmp != tmpcoeff)
+				{
+					ex /= 10.;
+					tmpcoeff *= 10.;
+					tmp = (int)tmpcoeff;
+				}
+
+				coeff = coeff + ex;
 				i++;
 				continue;
 			}
@@ -90,6 +107,8 @@ TPolinom::TPolinom(const string _str)  // TODO
 				isy = false;
 				isz = false;
 				isdegree = false;
+				iscoeff = false;
+				point = false;
 				i++;
 				continue;
 			}
@@ -100,6 +119,8 @@ TPolinom::TPolinom(const string _str)  // TODO
 				isy = true;
 				isz = false;
 				isdegree = false;
+				iscoeff = false;
+				point = false;
 				i++;
 				continue;
 			}
@@ -110,18 +131,20 @@ TPolinom::TPolinom(const string _str)  // TODO
 				isy = false;
 				isz = true;
 				isdegree = false;
+				iscoeff = false;
+				point = false;
 				i++;
 				continue;
 			}
 
-			if (symbol == '^')
+			if (symbol == '^' && (isx || isy || isz))
 			{
 				isdegree = true;
 				i++;
 				continue;
 			}
 
-			if (isdegree)
+			if (isdegree && (isx || isy || isz))
 			{
 				if (isx)
 					degree = degree + ((int)symbol - 48) * 100;
@@ -131,9 +154,13 @@ TPolinom::TPolinom(const string _str)  // TODO
 					degree = degree + ((int)symbol - 48);
 
 				isx = isy = isz = false;
+				isdegree = false;
 				i++;
 				continue;
 			}
+
+			throw Exception("Error! Not correct string!");
+
 		} while (!IsOperation(static_cast<char>(_str[i])) && (i != _str.length()));
 
 		if (ismin && coeff != 0)
