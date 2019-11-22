@@ -196,8 +196,37 @@ const TPolinom& TPolinom::operator=(const TPolinom& _copy)
 	if (this == &_copy)
 		return *this;
 
-	delete monoms;
+	if (monoms->GetpFirst())
+		delete monoms;
 	monoms = new TList<int, float>(*_copy.monoms);
+};
+
+TPolinom TPolinom::operator+(const TPolinom& _copy)
+{
+	TPolinom tmp(this->monoms);
+	_copy.monoms->Reset();
+
+	while (!_copy.monoms->IsEnded())
+	{
+		tmp.monoms->Reset();
+
+		while ((!tmp.monoms->IsEnded()) && (_copy.monoms->GetpCurrent()->key != tmp.monoms->GetpCurrent()->key))
+			tmp.monoms->Next();
+
+		if (tmp.monoms->IsEnded())
+		{
+			tmp.monoms->PushEnd(_copy.monoms->GetpCurrent()->key, _copy.monoms->GetpCurrent()->pData);
+			_copy.monoms->Next();
+			continue;
+		}
+
+		tmp.monoms->GetpCurrent()->pData += _copy.monoms->GetpCurrent()->pData;
+		_copy.monoms->Next();
+	}
+
+	tmp.CastToDefault();
+
+	return tmp;
 };
 
 ostream& operator<<(ostream& _out, TPolinom& _p)

@@ -24,7 +24,7 @@ void main()
 		TPolinom polinom(listParametr);
 		cout << polinom;
 		
-		string str = "5x^3 + 12x^2y^3 -21x^1y^2z^9";
+		string str = "5x^3 + 12x^2y^3 -21x^1y^2z^3";
 		TPolinom poli(str);
 		cout << poli;
 
@@ -33,6 +33,10 @@ void main()
 		cout << polinom;
 		copy = poli;
 		cout << poli;
+
+		TPolinom sum;
+		sum = copy + polinom;
+		cout << sum;
 	}
 	catch (Exception ex)
 	{
