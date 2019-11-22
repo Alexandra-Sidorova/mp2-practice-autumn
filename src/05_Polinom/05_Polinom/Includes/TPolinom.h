@@ -163,9 +163,9 @@ TPolinom::TPolinom(const string _str)
 
 		} while (!IsOperation(static_cast<char>(_str[i])) && (i != _str.length()));
 
-		if (ismin && coeff != 0)
+		if (ismin && (coeff != 0))
 			monoms->PushEnd(degree, -coeff);
-		if (!ismin && coeff != 0)
+		if (!ismin && (coeff != 0))
 			monoms->PushEnd(degree, coeff);
 
 		if (static_cast<char>(_str[i]) == '-')
@@ -275,6 +275,48 @@ TPolinom TPolinom::operator-(const TPolinom& _copy)
 {
 	TPolinom tmp(_copy);
 	return *this + (-tmp);
+};
+
+TPolinom TPolinom::operator*(const TPolinom& _copy)
+{
+	TPolinom tmp;
+	_copy.monoms->Reset();
+
+	while (!_copy.monoms->IsEnded())
+	{
+		this->monoms->Reset();
+
+		while (!this->monoms->IsEnded())
+		{
+			float coeff = this->monoms->GetpCurrent()->pData * _copy.monoms->GetpCurrent()->pData;
+
+			int degreeX = this->monoms->GetpCurrent()->key / 100;
+			int degreeY = (this->monoms->GetpCurrent()->key / 10) % 10;
+			int degreeZ = this->monoms->GetpCurrent()->key % 10;
+
+			int copyDegreeX = _copy.monoms->GetpCurrent()->key / 100;
+			int copyDegreeY = (_copy.monoms->GetpCurrent()->key / 10) % 10;
+			int copyDegreeZ = _copy.monoms->GetpCurrent()->key % 10;
+			
+			if (((degreeX + copyDegreeX) > 9) || ((degreeY + copyDegreeY) > 9)
+				|| ((degreeZ + copyDegreeZ) > 9))
+				throw Exception("Error! Degrees are not correct!");
+
+			int key = (degreeX + copyDegreeX) * 100 +
+				(degreeY + copyDegreeY) * 10 + (degreeZ + copyDegreeZ);
+
+			tmp.monoms->PushEnd(key, coeff);
+			this->monoms->Next();
+		}
+
+		_copy.monoms->Next();
+	}
+
+	this->monoms->Reset();
+	_copy.monoms->Reset();
+	tmp.monoms->Reset();
+	tmp.CastToDefault();
+	return tmp;
 };
 
 TPolinom TPolinom::operator-()
