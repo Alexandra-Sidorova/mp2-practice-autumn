@@ -21,7 +21,7 @@ private:
 	bool IsOperation(const char) const;
 public:
 	TPolinom();
-	TPolinom(const string);  // TODO
+	TPolinom(const string);
 	TPolinom(TList<int, float>*);
 	TPolinom(const TPolinom&);
 	~TPolinom();
@@ -198,12 +198,14 @@ const TPolinom& TPolinom::operator=(const TPolinom& _copy)
 
 	if (monoms->GetpFirst())
 		delete monoms;
+	
 	monoms = new TList<int, float>(*_copy.monoms);
+	return *this;
 };
 
 TPolinom TPolinom::operator+(const TPolinom& _copy)
 {
-	TPolinom tmp(this->monoms);
+	TPolinom tmp(*this);
 	_copy.monoms->Reset();
 
 	while (!_copy.monoms->IsEnded())
@@ -223,9 +225,42 @@ TPolinom TPolinom::operator+(const TPolinom& _copy)
 		tmp.monoms->GetpCurrent()->pData += _copy.monoms->GetpCurrent()->pData;
 		_copy.monoms->Next();
 	}
+	
+	tmp.monoms->Reset();
+	while (!tmp.monoms->IsEnded())
+	{
+		if (tmp.monoms->GetpCurrent()->pData == 0)
+		{
+			tmp.monoms->Delete(tmp.monoms->GetpCurrent()->key);
+			continue;
+		}
 
+		tmp.monoms->Next();
+	}
+
+	_copy.monoms->Reset();
+	tmp.monoms->Reset();
 	tmp.CastToDefault();
+	return tmp;
+};
 
+TPolinom TPolinom::operator-(const TPolinom& _copy)
+{
+	TPolinom tmp(_copy);
+	return *this + (-tmp);
+};
+
+TPolinom TPolinom::operator-()
+{
+	TPolinom tmp(*this);
+
+	while (!tmp.monoms->IsEnded())
+	{
+		tmp.monoms->GetpCurrent()->pData *= -1;
+		tmp.monoms->Next();
+	}
+
+	tmp.monoms->Reset();
 	return tmp;
 };
 

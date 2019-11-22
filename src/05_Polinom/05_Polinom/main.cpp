@@ -19,24 +19,28 @@ void main()
 		TNode<int, float>* node1 = new TNode<int, float>(30, 3, node2);
 		TNode<int, float>* node0 = new TNode<int, float>(9, 7, node1);
 		TList<int, float>* listParametr = new TList<int, float>(node0);
-		cout << *listParametr;
 
 		TPolinom polinom(listParametr);
-		cout << polinom;
+		cout << "polinom: " << polinom;
 		
 		string str = "5x^3 + 12x^2y^3 -21x^1y^2z^3";
 		TPolinom poli(str);
-		cout << poli;
+		cout << "poli: " << poli;
 
 		TPolinom copy;
 		copy = polinom;
-		cout << polinom;
-		copy = poli;
-		cout << poli;
+		cout << "copy.polinom: " << copy;
+		copy = -poli;
+		cout << "copy.-poly: " << copy;
 
 		TPolinom sum;
 		sum = copy + polinom;
-		cout << sum;
+		cout << "sum = copy + polinom: " << sum;
+
+		TPolinom min;
+		min = sum - polinom;
+		cout << "min = sum - polinom: " << min;
+		cout << "sum: " << sum;
 	}
 	catch (Exception ex)
 	{
