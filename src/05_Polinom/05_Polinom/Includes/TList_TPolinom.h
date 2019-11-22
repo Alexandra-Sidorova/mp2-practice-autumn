@@ -28,7 +28,7 @@ public:
 	TNode<int, float>* GetpFirst() const;
 	TNode<int, float>* GetpCurrent() const;
 
-	void SortData();
+	void SortKey();
 	TNode<int, float>* Search(int);
 	void PushBegin(int, float);
 	void PushEnd(int, float);
@@ -69,7 +69,10 @@ public:
 
 TList<int, float>::TList()
 {
-	pFirst = pNext = pPrev = pCurrent = NULL;
+	pFirst = NULL;
+	pNext = NULL;
+	pPrev = NULL;
+	pCurrent = NULL;
 };
 
 TList<int, float>::TList(const TList& _copy)
@@ -182,7 +185,7 @@ TNode<int, float>* TList<int, float>::GetpCurrent() const
 };
 //-----------------------------------------------------------------
 
-void TList<int, float>::SortData()
+void TList<int, float>::SortKey()
 {
 	TNode<int, float>* last = new TNode<int, float>;
 	TNode<int, float>* tmpfirst = new TNode<int, float>;
@@ -195,7 +198,7 @@ void TList<int, float>::SortData()
 
 		while (!this->IsEnded())
 		{
-			if (pCurrent->pData < min->pData)
+			if (pCurrent->key < min->key)
 				min = pCurrent;
 			this->Next();
 		}
