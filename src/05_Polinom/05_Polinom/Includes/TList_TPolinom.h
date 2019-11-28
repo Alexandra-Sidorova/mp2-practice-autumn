@@ -193,6 +193,7 @@ void TList<int, float>::SortKey()
 
 	while (this->pFirst)
 	{
+		this->Reset();
 		TNode<int, float>* min = new TNode<int, float>;
 		min = pFirst;
 

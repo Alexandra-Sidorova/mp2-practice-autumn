@@ -26,8 +26,8 @@ void main()
 		TPolinom listPolinom(listParametr);
 		cout << listPolinom << endl;
 
-		cout << "String Parameterized (5x^3 + 12x^2y^3 - 21x^1y^2z^3): ";
-		string str1 = "5x^3 + 12x^2y^3 - 21x^1y^2z^3";
+		cout << "String Parameterized (5x^3 + 12x^2y^3 - 21x^1y^2z^3 + 10): ";
+		string str1 = "5x^3 + 12x^2y^3 - 21x^1y^2z^3 + 10";
 		TPolinom stringPolinom1(str1);
 		cout << stringPolinom1 << endl;
 
