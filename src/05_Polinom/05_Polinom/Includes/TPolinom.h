@@ -29,6 +29,7 @@ public:
 	TPolinom operator-(const TPolinom&);
 	TPolinom operator*(const TPolinom&);
 	TPolinom operator-();
+	bool operator==(const TPolinom&) const;
 	friend ostream& operator<<(ostream&, TPolinom&);
 };
 //-----------------------------------------------------------------
@@ -189,7 +190,7 @@ TPolinom::TPolinom(TList<int, float>* _monoms)
 	}
 
 	monoms = new TList<int, float>(*_monoms);
-	this->CastToDefault();
+	this->CastToDefault(); //
 };
 
 TPolinom::TPolinom(const TPolinom& _copy)
@@ -220,7 +221,7 @@ bool TPolinom::IsOperation(const char _s) const
 
 const TPolinom& TPolinom::operator=(const TPolinom& _copy)
 {
-	if (this == &_copy)
+	if (*this == _copy) //
 		return *this;
 
 	if (monoms->GetpFirst())
@@ -331,6 +332,17 @@ TPolinom TPolinom::operator-()
 
 	tmp.monoms->Reset();
 	return tmp;
+};
+
+bool TPolinom::operator==(const TPolinom& _copy) const
+{
+	this->monoms->Reset();
+	_copy.monoms->Reset();
+
+	while (this->monoms->IsEnded())
+	{
+		if (this->monoms->GetpCurrent())
+	}
 };
 
 ostream& operator<<(ostream& _out, TPolinom& _p)

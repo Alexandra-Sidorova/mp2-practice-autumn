@@ -21,6 +21,19 @@ public:
 		pData = 0;
 		pNext = NULL;
 	}
+
+	bool operator==(const TNode*) const;
+	bool operator!=(const TNode*) const;
+};
+
+bool TNode<int, float>::operator==(const TNode* _n) const
+{
+	return((this->key == _n->key) && (this->pData == _n->pData));
+};
+
+bool TNode<int, float>::operator!=(const TNode* _n) const
+{
+	return(*this == _n);
 };
 
 #endif
