@@ -30,6 +30,7 @@ public:
 	TPolinom operator*(const TPolinom&);
 	TPolinom operator-();
 	bool operator==(const TPolinom&) const;
+	bool operator!=(const TPolinom&) const;
 	friend ostream& operator<<(ostream&, TPolinom&);
 };
 //-----------------------------------------------------------------
@@ -60,7 +61,7 @@ TPolinom::TPolinom(const string _str)
 		bool isy = false;  // check for y
 		bool isz = false;  // check for z
 
-		do
+		while (!IsOperation(static_cast<char>(_str[i])) && (i != _str.length()))
 		{
 			char symbol = static_cast<char>(_str[i]);
 
@@ -162,7 +163,7 @@ TPolinom::TPolinom(const string _str)
 
 			throw Exception("Error! Not correct string!");
 
-		} while (!IsOperation(static_cast<char>(_str[i])) && (i != _str.length()));
+		}
 
 		if (ismin && (coeff != 0))
 			monoms->PushEnd(degree, -coeff);
@@ -190,7 +191,7 @@ TPolinom::TPolinom(TList<int, float>* _monoms)
 	}
 
 	monoms = new TList<int, float>(*_monoms);
-	this->CastToDefault(); //
+	this->CastToDefault();
 };
 
 TPolinom::TPolinom(const TPolinom& _copy)
@@ -207,8 +208,28 @@ TPolinom::~TPolinom()
 
 void TPolinom::CastToDefault()
 {
-	if (!monoms)
+	if (!monoms->GetpFirst())
 		throw Exception("Error! Polinom is empty!");
+
+	monoms->Reset();
+
+	while (!monoms->IsEnded())  // degree repetition check
+	{
+		TNode<int, float>* tmpPrev = monoms->GetpFirst();
+
+		while (tmpPrev->key != monoms->GetpCurrent()->key)
+			tmpPrev = tmpPrev->pNext;
+
+		if (tmpPrev == monoms->GetpCurrent())
+		{
+			monoms->Next();
+			continue;
+		}
+
+		monoms->GetpCurrent()->pData += tmpPrev->pData;
+		monoms->Delete(tmpPrev->key);
+		monoms->Next();
+	}
 
 	monoms->SortKey();
 };
@@ -221,7 +242,7 @@ bool TPolinom::IsOperation(const char _s) const
 
 const TPolinom& TPolinom::operator=(const TPolinom& _copy)
 {
-	if (*this == _copy) //
+	if (*this == _copy)
 		return *this;
 
 	if (monoms->GetpFirst())
@@ -240,34 +261,22 @@ TPolinom TPolinom::operator+(const TPolinom& _copy)
 	{
 		tmp.monoms->Reset();
 
-		while ((!tmp.monoms->IsEnded()) && (_copy.monoms->GetpCurrent()->key != tmp.monoms->GetpCurrent()->key))
+		while (!(tmp.monoms->IsEnded()) && (tmp.monoms->GetpCurrent()->key <= _copy.monoms->GetpCurrent()->key))
 			tmp.monoms->Next();
 
-		if (tmp.monoms->IsEnded())
+		if (!tmp.monoms->GetpCurrent())
 		{
 			tmp.monoms->PushEnd(_copy.monoms->GetpCurrent()->key, _copy.monoms->GetpCurrent()->pData);
 			_copy.monoms->Next();
 			continue;
 		}
 
-		tmp.monoms->GetpCurrent()->pData += _copy.monoms->GetpCurrent()->pData;
+		tmp.monoms->PushBefore(tmp.monoms->GetpCurrent()->key, _copy.monoms->GetpCurrent()->key, 
+			_copy.monoms->GetpCurrent()->pData);
+
 		_copy.monoms->Next();
 	}
-	
-	tmp.monoms->Reset();
-	while (!tmp.monoms->IsEnded())
-	{
-		if (tmp.monoms->GetpCurrent()->pData == 0)
-		{
-			tmp.monoms->Delete(tmp.monoms->GetpCurrent()->key);
-			continue;
-		}
 
-		tmp.monoms->Next();
-	}
-
-	_copy.monoms->Reset();
-	tmp.monoms->Reset();
 	tmp.CastToDefault();
 	return tmp;
 };
@@ -336,13 +345,12 @@ TPolinom TPolinom::operator-()
 
 bool TPolinom::operator==(const TPolinom& _copy) const
 {
-	this->monoms->Reset();
-	_copy.monoms->Reset();
+	return(*(this->monoms) == *(_copy.monoms));
+};
 
-	while (this->monoms->IsEnded())
-	{
-		if (this->monoms->GetpCurrent())
-	}
+bool TPolinom::operator!=(const TPolinom& _copy) const
+{
+	return(*(this->monoms) != *(_copy.monoms));
 };
 
 ostream& operator<<(ostream& _out, TPolinom& _p)

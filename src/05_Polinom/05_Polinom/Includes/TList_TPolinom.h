@@ -36,6 +36,8 @@ public:
 	void PushAfter(int, int, float);
 	void Delete(int);
 
+	bool operator==(const TList&) const;
+	bool operator!=(const TList&) const;
 	friend ostream& operator<<(ostream& _out, TList<int, float>& _list)
 	{
 		if (!_list.pFirst)
@@ -464,6 +466,25 @@ void TList<int, float>::Delete(int _key)
 	delete nodeFind;
 
 	return;
+};
+
+bool TList<int, float>::operator==(const TList& _l) const
+{
+	TNode<int, float>* tmpThisIter = this->pFirst;
+	TNode<int, float>* tmpAnotherIter = _l.pFirst;
+
+	while (tmpThisIter && tmpAnotherIter && (*tmpThisIter == *tmpAnotherIter))
+	{
+		tmpThisIter = tmpThisIter->pNext;
+		tmpAnotherIter = tmpAnotherIter->pNext;
+	}
+
+	return (!(tmpThisIter || tmpAnotherIter));
+};
+
+bool TList<int, float>::operator!=(const TList& _l) const
+{
+	return (!(*this == _l));
 };
 
 #endif

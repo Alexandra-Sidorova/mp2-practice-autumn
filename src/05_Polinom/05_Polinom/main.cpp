@@ -105,10 +105,10 @@ void main()
 		cout << "### Testing of operator * ###" << endl << endl;
 
 		cout << "Polinom1: ";
-		TPolinom polinom1("5x^2 + 15y^2z^3 + 6x^3y^2z^5");
+		TPolinom polinom1("5x^2 + 15y^2z^3 + 6x^2y^2z^2");
 		cout << polinom1;
 		cout << "Polinom2: ";
-		TPolinom polinom2("10z^2 - 8y^2z^3");
+		TPolinom polinom2("10z^2 - 8y^2z^4");
 		cout << polinom2;
 		cout << "Polinom1 * Polinom2: ";
 		TPolinom sub1 = polinom1 * polinom2;
@@ -123,6 +123,29 @@ void main()
 		cout << "Polinom3 * Polinom4: ";
 		TPolinom sub2 = polinom3 * polinom4;
 		cout << sub2 << endl;
+	}
+	catch (Exception ex)
+	{
+		cout << ex.what() << endl << endl;
+	}
+
+	try
+	{
+		cout << "### Testing of operator == / != ###" << endl << endl;
+
+		cout << "Polinom1: ";
+		TPolinom polinom1("5x^2 + 15y^2z^3");
+		cout << polinom1;
+		cout << "Polinom2: ";
+		TPolinom polinom2("10z^2 - 8y^2z^3");
+		cout << polinom2;
+		cout << "Polinom1 == Polinom2: ";
+		cout << (polinom1 == polinom2) << endl;
+		TPolinom polinom3("-8y^2z^3 + 10z^2");
+		cout << "Polinom3: ";
+		cout << polinom3;
+		cout << "Polinom2 == Polinom3: ";
+		cout << (polinom2 == polinom3) << endl;
 	}
 	catch (Exception ex)
 	{
