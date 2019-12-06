@@ -48,18 +48,18 @@ TPolinom::TPolinom(const string _str)
 	monoms = new TList<int, float>;
 	
 	int i = 0; // number of symbol
-	bool ismin = false;  // check for minus
+	bool ismin = false;  // minus check
 
 	while (i < _str.length())
 	{
 		float coeff = 0;
 		int degree = 0;
-		bool point = false;  // check for floating point
-		bool isdegree = false;  // check for degree
-		bool iscoeff = true;  // check for coeff
-		bool isx = false;  // check for x
-		bool isy = false;  // check for y
-		bool isz = false;  // check for z
+		bool point = false;  // floating point check
+		bool isdegree = false;  // degree check
+		bool iscoeff = true;  // coeff check
+		bool isx = false;  // x check
+		bool isy = false;  // y check
+		bool isz = false;  // z check
 
 		while (!IsOperation(static_cast<char>(_str[i])) && (i != _str.length()))
 		{
@@ -187,6 +187,7 @@ TPolinom::TPolinom(TList<int, float>* _monoms)
 	{
 		if (_monoms->GetpCurrent()->key > 999)
 			throw Exception("Error! Degree of monom is not correct!");
+		
 		_monoms->Next();
 	}
 
