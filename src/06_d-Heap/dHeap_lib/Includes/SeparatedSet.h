@@ -8,7 +8,9 @@ private:
 	int* arr;
 
 public:
+	SeparatedSet(int);
 	SeparatedSet(int, int*);
+	SeparatedSet(const SeparatedSet&);
 	~SeparatedSet();
 
 	void CreateSingleton();

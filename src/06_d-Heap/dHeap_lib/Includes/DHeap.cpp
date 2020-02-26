@@ -2,6 +2,19 @@
 #include "exceptions.h"
 
 #include <cmath>
+#include <algorithm>
+
+template<typename T>
+DHeap<T>::DHeap(int _maxSize, int _d)
+{
+	if (_maxSize <= 0 || _d <= 0)
+		throw Exception("[Error] Incorrect data!");
+
+	maxSize = _maxSize;
+	currentSize = 0;
+	d = _d;
+	elems = new T[maxSize];
+};
 
 template<typename T>
 DHeap<T>::DHeap(int _maxSize, int _currentSize, int _d, T* _elems)
@@ -38,9 +51,33 @@ DHeap<T>::~DHeap()
 	delete elems;
 };
 //-----------------------------------------------------------------------------------
+template<typename T>
+int DHeap<T>::GetCurrentSize() const
+{
+	return currentSize;
+};
 
 template<typename T>
-int DHeap<T>::MinChild(int i)
+T* DHeap<T>::GetElems() const
+{
+	return elems;
+};
+
+template<typename T>
+void DHeap<T>::SetCurrentSize(const int _size)
+{
+	currentSize = _size;
+};
+
+template<typename T>
+void DHeap<T>::Push(const T _elem)
+{
+	elems[currentSize++] = _elem;
+	Heapify();
+};
+
+template<typename T>
+int DHeap<T>::MinChild(int i) const
 {
 	if (i < 0 || i > currentSize)
 		throw Exception("[Error] Incorrent ID parent!");
@@ -49,7 +86,7 @@ int DHeap<T>::MinChild(int i)
 		return (-1);  // have no childs;
 
 	int childFirst = i * d + 1;
-	int childLast = std::min(i * d + d, currentSize - 1);
+	int childLast = min(i * d + d, currentSize - 1);
 	int childMin = childFirst;
 
 	for (int j = childFirst + 1; j < childLast; j++)
@@ -113,6 +150,12 @@ void DHeap<T>::PopMin()
 	Transpose(0, currentSize - 1);
 	currentSize--;
 	SiftDown(0);
+};
+
+template<typename T>
+T DHeap<T>::WatchMin() const
+{
+	return elems[0];
 };
 
 template<typename T>

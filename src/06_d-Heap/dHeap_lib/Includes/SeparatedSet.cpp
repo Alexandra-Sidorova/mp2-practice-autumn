@@ -1,14 +1,35 @@
 #include "SeparatedSet.h"
 #include "exceptions.h"
 
-SeparatedSet::SeparatedSet(int _size, int* _arr) : size(_size)
+
+SeparatedSet::SeparatedSet(int _size)
+{
+	if (size <= 0)
+		throw Exception("[Error] Incorrect data!");
+	size = _size;
+
+	arr = new int[size];
+	for (int i = 0; i < size; i++)
+		arr[i] = -1;
+};
+
+SeparatedSet::SeparatedSet(int _size, int* _arr)
 {
 	if (size <= 0 || _arr == NULL)
 		throw Exception("[Error] Incorrect data!");
+	size = _size;
 
 	arr = new int[size];	
 	for (int i = 0; i < size; i++)
 		arr[i] = _arr[i];
+};
+
+SeparatedSet::SeparatedSet(const SeparatedSet& _copy)
+{
+	size = _copy.size;
+	arr = new int[size];
+	for (int i = 0; i < size; i++)
+		arr[i] = _copy.arr[i];
 };
 
 SeparatedSet::~SeparatedSet()

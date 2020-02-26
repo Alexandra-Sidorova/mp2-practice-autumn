@@ -11,15 +11,22 @@ private:
 	T* elems;
 
 public:
+	DHeap(int, int);
 	DHeap(int, int, int, T*);
 	DHeap(const DHeap&);
 	~DHeap();
 
-	int MinChild(int);
+	int GetCurrentSize() const;
+	T* GetElems() const;
+	void SetCurrentSize(const int);
+
+	void Push(const T);
+	int MinChild(int) const;
 	void Transpose(int, int);
 	void SiftUp(int);
 	void SiftDown(int);
 	void PopMin();
+	T WatchMin() const;
 	void Heapify();
 };
 
