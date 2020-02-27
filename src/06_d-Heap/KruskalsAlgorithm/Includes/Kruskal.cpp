@@ -13,7 +13,7 @@ DHeap<Edge> Kruskal::CreateEdges(vector<vector<float> > _graph)
 	DHeap<Edge> edges(_graph.size() * _graph.size(), 1);
 
 	for (int i = 0; i < _graph.size(); i++)
-		for (int j = i; j < _graph[i].size(); j++)
+		for (int j = 0; j < i; j++)
 		{
 			if (_graph[i][j] >= 0)
 			{

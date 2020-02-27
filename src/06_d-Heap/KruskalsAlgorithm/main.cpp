@@ -2,7 +2,7 @@
 #include <vector>
 
 #include "exceptions.h"
-//#include "Includes/Kruskal.h"
+#include "Includes/Kruskal.h"
 
 using namespace std;
 
@@ -21,14 +21,23 @@ void main()
 
 		for (int i = 0; i < graph.size(); i++)
 		{
-			for (int j = 0; j < i; j++)
+			for (int j = 0; j <= i; j++)
 			{
 				cout << graph[i][j] << "\t";
 			}
 			cout << endl;
 		}
 
-		//vector<vector<float> > graph
+		vector<vector<float> > newGraph = Kruskal::Algorithm(graph);
+
+		for (int i = 0; i < newGraph.size(); i++)
+		{
+			for (int j = 0; j <= i; j++)
+			{
+				cout << newGraph[i][j] << "\t";
+			}
+			cout << endl;
+		}
 	}
 	catch (Exception ex)
 	{
