@@ -9,6 +9,7 @@ private:
 	int end;
 
 public:
+	Edge();
 	Edge(int, int, int);
 	~Edge();
 
