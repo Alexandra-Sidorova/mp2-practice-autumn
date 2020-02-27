@@ -21,9 +21,10 @@ void HeapSort<T>::Sort(T*& _array, int _size)
 	{
 		heap.Transpose(0, heap.GetCurrentSize() - 1);
 		heap.SetCurrentSize(heap.GetCurrentSize() - 1);
-		heap.SiftDown(i);
+		heap.SiftDown(0);
 	}
 
-	_array = heap.GetElems();
+	for (int i = 0; i < _size; i++)
+		_array[i] = heap.GetElems()[i];
 };
 #endif

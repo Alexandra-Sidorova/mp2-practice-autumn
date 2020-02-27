@@ -23,9 +23,7 @@ void main()
 
 		HeapSort<int>::Sort(elements, 10);
 		for (int i = 0; i < 10; i++)
-		{
 			cout << elements[i] << " ";
-		}
 	}
 	catch (Exception ex)
 	{
