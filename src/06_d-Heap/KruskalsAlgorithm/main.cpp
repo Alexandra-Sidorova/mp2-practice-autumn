@@ -3,6 +3,7 @@
 
 #include "exceptions.h"
 #include "Includes/Kruskal.h"
+#include "Includes/Graph.h"
 
 using namespace std;
 
@@ -12,32 +13,17 @@ void main()
 
 	try
 	{
-		vector<vector<float> > graph = { {-1}, 
-										 {8, -1}, 
-		                                 {-1, 10, -1}, 
-		                                 {-1, 1, 5, -1}, 
-		                                 {3, 0, 2, 4, -1}, 
-		                                 {-1, 2, 9, -1, -1, -1} };
+		vector<vector<float> > weights = { {-1},
+										 {8, -1},
+										 {-1, 10, -1},
+										 {-1, 1, 5, -1},
+										 {3, 0, 2, 4, -1},
+										 {-1, 2, 9, -1, -1, -1} };
 
-		for (int i = 0; i < graph.size(); i++)
-		{
-			for (int j = 0; j <= i; j++)
-			{
-				cout << graph[i][j] << "\t";
-			}
-			cout << endl;
-		}
-
-		vector<vector<float> > newGraph = Kruskal::Algorithm(graph);
-
-		for (int i = 0; i < newGraph.size(); i++)
-		{
-			for (int j = 0; j <= i; j++)
-			{
-				cout << newGraph[i][j] << "\t";
-			}
-			cout << endl;
-		}
+		Graph graph(weights);
+		cout << graph;
+		Graph newGraph = Kruskal::Algorithm(graph);
+		cout << newGraph;
 	}
 	catch (Exception ex)
 	{

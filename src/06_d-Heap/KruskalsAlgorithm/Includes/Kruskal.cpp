@@ -8,51 +8,15 @@
 
 using namespace std;
 
-DHeap<Edge> Kruskal::CreateEdges(vector<vector<float> > _graph)
+Graph Kruskal::Algorithm(Graph _graph)
 {
-	DHeap<Edge> edges(_graph.size() * _graph.size(), 1);
-
-	for (int i = 0; i < _graph.size(); i++)
-		for (int j = 0; j < i; j++)
-		{
-			if (_graph[i][j] >= 0)
-			{
-				Edge edge(_graph[i][j], i, j);
-				edges.Push(edge);
-			}
-		}
-
-	edges.Heapify();
-	return edges;
-};
-
-vector<vector<float> > Kruskal::CreateGraph(DHeap<Edge> _edges, int _size)
-{
-	vector<vector<float> > graph(_size);
-	DHeap<Edge> tmp(_edges);
-
-	for (int i = 0; i < _size; i++)
-		graph[i].resize(i);
-
-	while (tmp.GetCurrentSize() != 0)
-	{
-		Edge edge = tmp.WatchMin();
-		graph[max(edge.GetStart(), edge.GetEnd())][min(edge.GetStart(), edge.GetEnd())] = edge.GetWeight();
-		tmp.PopMin();
-	}
-
-	return graph;
-};
-
-vector<vector<float> > Kruskal::Algorithm(vector<vector<float> > _graph)
-{
-	SeparatedSet vertices(_graph.size());
+	SeparatedSet vertices(_graph.GetCountVertices());
 	vertices.CreateSingleton();
 
-	DHeap<Edge> edges = CreateEdges(_graph);
+	DHeap<Edge> edges = _graph.CreateEdges();
 	DHeap<Edge> currentNewGraph(edges.GetCurrentSize(), 1);
 
-	while ((currentNewGraph.GetCurrentSize() != (_graph.size() - 1)) && (edges.GetCurrentSize() != 0))
+	while ((currentNewGraph.GetCurrentSize() != (_graph.GetCountVertices() - 1)) && (edges.GetCurrentSize() != 0))
 	{
 		Edge edge = edges.WatchMin();
 		int setStart = vertices.Definition(edge.GetStart());
@@ -67,5 +31,5 @@ vector<vector<float> > Kruskal::Algorithm(vector<vector<float> > _graph)
 		edges.PopMin();
 	}
 
-	return CreateGraph(currentNewGraph, _graph.size());
+	return Graph(currentNewGraph, currentNewGraph.GetCurrentSize());
 };

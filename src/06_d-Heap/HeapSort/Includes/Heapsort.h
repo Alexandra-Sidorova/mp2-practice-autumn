@@ -7,12 +7,12 @@ template<typename T>
 class HeapSort
 {
 public:
-	static void Sort(T*&, int);
+	static void Sort(T*, int);
 };
 
 
 template<typename T>
-void HeapSort<T>::Sort(T*& _array, int _size)
+void HeapSort<T>::Sort(T* _array, int _size)
 {
 	DHeap<T> heap(_size, _size, 2, _array);
 	heap.Heapify();
