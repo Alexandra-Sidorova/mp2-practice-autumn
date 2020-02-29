@@ -14,7 +14,7 @@ Graph Kruskal::Algorithm(Graph _graph)
 	vertices.CreateSingleton();
 
 	DHeap<Edge> edges = _graph.CreateEdges();
-	DHeap<Edge> currentNewGraph(edges.GetCurrentSize(), 1);
+	DHeap<Edge> currentNewGraph(_graph.GetCountVertices(), 1);
 
 	while ((currentNewGraph.GetCurrentSize() != (_graph.GetCountVertices() - 1)) && (edges.GetCurrentSize() != 0))
 	{
@@ -31,5 +31,5 @@ Graph Kruskal::Algorithm(Graph _graph)
 		edges.PopMin();
 	}
 
-	return Graph(currentNewGraph, currentNewGraph.GetCurrentSize());
+	return Graph(currentNewGraph, _graph.GetCountVertices());
 };

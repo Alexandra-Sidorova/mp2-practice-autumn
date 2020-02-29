@@ -79,7 +79,7 @@ template<typename T>
 DHeap<T>::~DHeap()
 {
 	maxSize = currentSize = d = 0;
-	delete elems;
+	delete[] elems;
 };
 //-----------------------------------------------------------------------------------
 

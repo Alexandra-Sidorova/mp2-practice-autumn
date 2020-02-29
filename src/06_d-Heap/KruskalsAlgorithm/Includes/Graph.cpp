@@ -5,16 +5,21 @@ using namespace std;
 Graph::Graph(int _size)
 {
 	countVertices = _size;
-	vector<vector<float> > weights(countVertices);
+	weights.resize(countVertices);
 
 	for (int i = 0; i < countVertices; i++)
+	{
 		weights[i].resize(i + 1);
+
+		for (int j = 0; j <= i; j++)
+			weights[i][j] = -1;
+	}
 };
 
 Graph::Graph(vector<vector<float> > _graph)
 {
 	countVertices = _graph.size();
-	vector<vector<float> > weights(countVertices);
+	weights.resize(countVertices);
 
 	for (int i = 0; i < countVertices; i++)
 	{
@@ -29,19 +34,24 @@ Graph::Graph(vector<vector<float> > _graph)
 Graph::Graph(DHeap<Edge> _edges, int _size)
 {
 	countVertices = _size;
-	vector<vector<float> > weights(countVertices);
+	weights.resize(countVertices);
 
 	for (int i = 0; i < countVertices; i++)
+	{
 		weights[i].resize(i + 1);
 
-	for (int i = 0; i <= _edges.GetCurrentSize(); i++)
+		for (int j = 0; j <= i; j++)
+			weights[i][j] = -1;
+	}
+
+	for (int i = 0; i < _edges.GetCurrentSize(); i++)
 		weights[_edges.GetElems()[i].GetStart()][_edges.GetElems()[i].GetEnd()] = _edges.GetElems()[i].GetWeight();
 };
 
 Graph::Graph(const Graph& _graph)
 {
 	countVertices = _graph.countVertices;
-	vector<vector<float> > weights(countVertices);
+	weights.resize(countVertices);
 
 	for (int i = 0; i < countVertices; i++)
 	{
@@ -107,8 +117,10 @@ ostream& operator<<(ostream& _out, const Graph& _graph)
 {
 	for (int i = 0; i < _graph.countVertices; i++)
 	{
-		for (int j = 0; j <= i; j++)
-			_out << _graph.weights[i][j] << "\t";
+		for (int j = 0; j < i; j++)
+			_out << "\t";
+		for (int j = i; j < _graph.countVertices; j++)
+			_out << _graph.weights[j][i] << "\t";
 		_out << endl;
 	}
 
