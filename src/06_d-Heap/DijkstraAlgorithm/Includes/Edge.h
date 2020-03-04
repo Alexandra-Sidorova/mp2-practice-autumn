@@ -21,8 +21,6 @@ public:
 	bool operator>=(const Edge&) const;
 	bool operator<(const Edge&) const;
 	bool operator<=(const Edge&) const;
-
-
 };
 
 #endif

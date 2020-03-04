@@ -57,10 +57,7 @@ DHeap<T>::DHeap(int _maxSize, int _currentSize, int _d, T* _elems)
 	maxSize = _maxSize;
 	currentSize = _currentSize;
 	d = _d;
-
-	elems = new T[maxSize];
-	for (int i = 0; i < currentSize; i++)
-		elems[i] = _elems[i];
+	elems = _elems;
 };
 
 template<typename T>
@@ -69,17 +66,14 @@ DHeap<T>::DHeap(const DHeap& _copy)
 	maxSize = _copy.maxSize;
 	currentSize = _copy.currentSize;
 	d = _copy.d;
-
-	elems = new T[maxSize];
-	for (int i = 0; i < currentSize; i++)
-		elems[i] = _copy.elems[i];
+	elems = _copy.elems;
 };
 
 template<typename T>
 DHeap<T>::~DHeap()
 {
 	maxSize = currentSize = d = 0;
-	delete[] elems;
+	elems = nullptr;
 };
 //-----------------------------------------------------------------------------------
 

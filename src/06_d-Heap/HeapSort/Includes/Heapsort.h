@@ -9,7 +9,7 @@ class HeapSort
 public:
 	static void Sort(T*, int);
 };
-
+//------------------------------------------------------
 
 template<typename T>
 void HeapSort<T>::Sort(T* _array, int _size)
@@ -23,8 +23,5 @@ void HeapSort<T>::Sort(T* _array, int _size)
 		heap.SetCurrentSize(heap.GetCurrentSize() - 1);
 		heap.SiftDown(0);
 	}
-
-	for (int i = 0; i < _size; i++)
-		_array[i] = heap.GetElems()[i];
 };
 #endif
