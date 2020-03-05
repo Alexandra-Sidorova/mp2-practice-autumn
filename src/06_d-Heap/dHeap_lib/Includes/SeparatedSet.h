@@ -15,7 +15,7 @@ public:
 
 	void CreateSingleton();
 	void Union(int, int);
-	int Definition(int);
+	int Definition(int) const;
 };
 
 #endif

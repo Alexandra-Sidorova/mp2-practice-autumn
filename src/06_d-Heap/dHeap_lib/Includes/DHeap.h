@@ -40,7 +40,7 @@ template<typename T>
 DHeap<T>::DHeap(int _maxSize, int _d)
 {
 	if (_maxSize <= 0 || _d <= 0)
-		throw Exception("[Error] Incorrect data!");
+		throw Exception("Incorrect data!");
 
 	maxSize = _maxSize;
 	currentSize = 0;
@@ -51,8 +51,8 @@ DHeap<T>::DHeap(int _maxSize, int _d)
 template<typename T>
 DHeap<T>::DHeap(int _maxSize, int _currentSize, int _d, T* _elems)
 {
-	if (_maxSize <= 0 || _currentSize < 0 || _d <= 0 || _elems == NULL)
-		throw Exception("[Error] Incorrect data!");
+	if (_maxSize <= 0 || _currentSize < 0 || _d <= 0 || _elems == nullptr || _currentSize > _maxSize)
+		throw Exception("Incorrect data!");
 
 	maxSize = _maxSize;
 	currentSize = _currentSize;
@@ -92,8 +92,8 @@ T* DHeap<T>::GetElems() const
 template<typename T>
 void DHeap<T>::SetCurrentSize(const int _size)
 {
-	if (_size < 0)
-		throw Exception("[Error] Incorrect data!");
+	if (_size < 0 || _size > maxSize)
+		throw Exception("Incorrect data!");
 
 	currentSize = _size;
 };
@@ -109,7 +109,7 @@ template<typename T>
 int DHeap<T>::MinChild(int i) const
 {
 	if (i < 0 || i > currentSize)
-		throw Exception("[Error] Incorrent ID parent!");
+		throw Exception("Incorrent ID parent!");
 
 	if (i * d + 1 >= currentSize)
 		return (-1);  // have no childs;
@@ -131,7 +131,7 @@ template<typename T>
 void DHeap<T>::Transpose(int i, int j)
 {
 	if (i < 0 || j < 0 || i > currentSize || j > currentSize)
-		throw Exception("[Error] Incorrect ID elements to transpose!");
+		throw Exception("Incorrect ID elements to transpose!");
 
 	T tmp = elems[i];
 	elems[i] = elems[j];
@@ -142,7 +142,7 @@ template<typename T>
 void DHeap<T>::SiftUp(int i)
 {
 	if (i < 0 || i > currentSize)
-		throw Exception("[Error] Incorrent ID element!");
+		throw Exception("Incorrent ID element!");
 
 	int parent = (i - 1) / d;
 
@@ -161,7 +161,7 @@ template<typename T>
 void DHeap<T>::SiftDown(int i)
 {
 	if (i < 0 || i > currentSize)
-		throw Exception("[Error] Incorrent ID element!");
+		throw Exception("Incorrent ID element!");
 
 	int childMin = MinChild(i);
 

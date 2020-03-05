@@ -4,7 +4,7 @@
 SeparatedSet::SeparatedSet(int _size)
 {
 	if (_size <= 0)
-		throw Exception("[Error] Incorrect data!");
+		throw Exception("Incorrect data!");
 	size = _size;
 
 	arr = new int[size];
@@ -15,7 +15,7 @@ SeparatedSet::SeparatedSet(int _size)
 SeparatedSet::SeparatedSet(int _size, int* _arr)
 {
 	if (_size <= 0 || _arr == NULL)
-		throw Exception("[Error] Incorrect data!");
+		throw Exception("Incorrect data!");
 	size = _size;
 
 	arr = new int[size];
@@ -54,7 +54,7 @@ void SeparatedSet::Union(int i, int j)
 			arr[k] = i;
 };
 
-int SeparatedSet::Definition(int i)
+int SeparatedSet::Definition(int i) const
 {
 	if (i < 0 || i >= size)
 		throw Exception("[Error] Incorrect set number!");

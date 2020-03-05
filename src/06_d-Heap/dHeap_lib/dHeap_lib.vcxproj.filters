@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Includes\DHeap.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="Includes\SeparatedSet.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>

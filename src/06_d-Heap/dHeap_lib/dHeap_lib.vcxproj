@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Includes\DHeap.cpp" />
     <ClCompile Include="Includes\SeparatedSet.cpp" />
   </ItemGroup>
   <ItemGroup>
