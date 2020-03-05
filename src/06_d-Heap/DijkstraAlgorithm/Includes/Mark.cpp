@@ -1,7 +1,11 @@
 #include "Mark.h"
+#include "exceptions.h"
 
 Mark::Mark(int _v, float _dist)
 {
+	if (_v < 0 || _dist < 0)
+		throw Exception("Incorrect data!");
+
 	vert = _v;
 	dist = _dist;
 };

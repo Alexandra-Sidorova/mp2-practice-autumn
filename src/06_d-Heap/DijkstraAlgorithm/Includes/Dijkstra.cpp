@@ -7,8 +7,13 @@
 #include <cmath>
 #include <algorithm>
 
+#define D 3
+
 float** Dijkstra::Algorithm(Graph _graph, int _start)
 {
+	if (_start < 0 || _start >= _graph.GetCountVertices())
+		throw Exception("Incorrect start vertex!");
+
 	float* dist = new float[_graph.GetCountVertices()];
 	int* vertices = new int[_graph.GetCountVertices()];
 	Mark* marks = new Mark[_graph.GetCountVertices()];
@@ -24,12 +29,7 @@ float** Dijkstra::Algorithm(Graph _graph, int _start)
 	dist[_start] = 0;
 	marks[_start].dist = 0;
 
-	DHeap<Mark> markQueue(_graph.GetCountVertices(), _graph.GetCountVertices(), 2, marks);
-
-	//Mark* tmp = markQueue.GetElems();
-
-	//for (int i = 0; i < _graph.GetCountVertices(); i++)
-	//	cout << tmp[i].vert;
+	DHeap<Mark> markQueue(_graph.GetCountVertices(), _graph.GetCountVertices(), D, marks);
 
 	while (markQueue.GetCurrentSize() != 0)
 	{

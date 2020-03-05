@@ -120,7 +120,7 @@ int* Graph::Neighborhood(int _v)
 	return vertices;
 };
 
-int Graph::DegreeVert(int _v)
+int Graph::DegreeVert(int _v) const
 {
 	int count = 0;
 
@@ -135,7 +135,7 @@ int Graph::DegreeVert(int _v)
 	return count;
 };
 
-float Graph::Weight(int _i, int _j)
+float Graph::Weight(int _i, int _j) const
 {
 	return weights[max(_i, _j)][min(_i,_j)];
 }

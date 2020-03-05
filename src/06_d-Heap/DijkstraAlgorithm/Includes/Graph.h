@@ -25,8 +25,8 @@ public:
 	DHeap<Edge> CreateEdges();
 	void Random();
 	int* Neighborhood(int);
-	int DegreeVert(int);
-	float Weight(int, int);
+	int DegreeVert(int) const;
+	float Weight(int, int) const;
 
 	friend istream& operator>>(istream&, Graph&);
 	friend ostream& operator<<(ostream&, const Graph&);
