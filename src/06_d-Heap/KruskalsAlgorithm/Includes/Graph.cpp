@@ -4,6 +4,9 @@ using namespace std;
 
 Graph::Graph(int _size)
 {
+	if (_size <= 0)
+		throw Exception("Incorrect size of graph!");
+
 	countVertices = _size;
 	weights.resize(countVertices);
 
@@ -18,6 +21,9 @@ Graph::Graph(int _size)
 
 Graph::Graph(vector<vector<float> > _graph)
 {
+	if (_graph.size() <= 0)
+		throw Exception("Incorrect size of graph as vectors vector!");
+
 	countVertices = _graph.size();
 	weights.resize(countVertices);
 
@@ -25,14 +31,19 @@ Graph::Graph(vector<vector<float> > _graph)
 	{
 		weights[i].resize(i + 1);
 
+		if (_graph[i].size() != (i + 1))
+			throw Exception("Incorrect size of vectors vector!");
+
 		for (int j = 0; j <= i; j++)
 			weights[i][j] = _graph[i][j];
-
 	}
 };
 
 Graph::Graph(DHeap<Edge> _edges, int _size)
 {
+	if (_size <= 0)
+		throw Exception("Incorrect size of graph!");
+
 	countVertices = _size;
 	weights.resize(countVertices);
 

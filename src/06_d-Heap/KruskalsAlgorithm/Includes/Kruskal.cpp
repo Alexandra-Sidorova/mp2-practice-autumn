@@ -6,6 +6,8 @@
 #include <cmath>
 #include <algorithm>
 
+#define D 3
+
 using namespace std;
 
 Graph Kruskal::Algorithm(Graph _graph)
@@ -14,7 +16,7 @@ Graph Kruskal::Algorithm(Graph _graph)
 	vertices.CreateSingleton();
 
 	DHeap<Edge> edges = _graph.CreateEdges();
-	DHeap<Edge> currentNewGraph(_graph.GetCountVertices(), 1);
+	DHeap<Edge> currentNewGraph(_graph.GetCountVertices(), D);
 
 	while ((currentNewGraph.GetCurrentSize() != (_graph.GetCountVertices() - 1)) && (edges.GetCurrentSize() != 0))
 	{
