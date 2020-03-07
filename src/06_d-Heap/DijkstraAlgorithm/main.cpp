@@ -3,8 +3,8 @@
 #include <time.h>
 
 #include "exceptions.h"
-#include "Includes/Dijkstra.h"
-#include "Includes/Graph.h"
+#include "Dijkstra.h"
+#include "Graph.h"
 
 #define RANDOM 20
 
@@ -20,34 +20,37 @@ void main()
 	{
 		cout << endl << "CLASS EXAMPLE" << endl;
 		
-		vector<vector<float> > weights = { {-1},
-										 {5, -1},
-										 {8, 2, -1},
-										 {11, -1, 3, -1},
-										 {-1, 4, 2, -1, -1},
-										 {-1, -1, -1, 8, 6, -1},
-										 {-1, -1, -1, -1, -1, 13, -1},
-										 {-1, -1, -1, -1, 1, 24, 5, -1} };
+		int size = 8;
+		float weights[64] = { -1, 5, 8, 11, -1, -1, -1, -1,
+							   5, -1, 2, -1, 4, -1, -1, -1,
+							   8, 2, -1, 3, 2, -1, -1, -1,
+							   11, -1, 3, -1, -1, 8, -1, -1,
+							   -1, 4, -1, -1, -1, 6, -1, 1,
+							   -1, -1, -1, 8, 6, -1, 13, 24,
+							   -1, -1, -1, -1, -1, 13, -1, 5,
+							   -1, -1, -1, -1, 1, 24, 5, -1 };
 
-		Graph graph(weights);
+		Graph graph(weights, size);
 		cout << graph;
 		cout << "Start vertex = 0" << endl;
-		float** result = Dijkstra::Algorithm(graph, 0);
+		vector<vector<int> > paths;
+		float* result = Dijkstra::Algorithm(graph, 0, paths);
 		
-		cout << "Shortest distances: " << endl;
-		for (int i = 0; i < weights.size(); i++)
-			cout << result[i][0] << " ";
+		for (int i = 0; i < size; i++)
+		{
+			cout << "Vertex - " << i << " Distance - " << result[i] << " Path: [ ";
+			for (auto iter = paths[i].begin(); iter != paths[i].end(); ++iter)
+				cout << *iter << " ";
 
-		cout << endl << "Previous vertices: " << endl;
-		for (int i = 0; i < weights.size(); i++)
-			cout << result[i][1] << " ";
+			cout << "]" << endl;
+		}
 	}
 	catch (Exception ex)
 	{
 		cout << "[ERROR] " << ex.what() << endl << endl;
 	}
 
-	try
+	/*try
 	{
 		cout << endl << endl << "RANDOM GRAPH" << endl;
 
@@ -119,5 +122,5 @@ void main()
 	catch (Exception ex)
 	{
 		cout << "[ERROR] " << ex.what() << endl << endl;
-	}
+	}*/
 }

@@ -6,7 +6,7 @@
 class Kruskal
 {
 public:
-	static Graph Algorithm(Graph);
+	static Edge* Algorithm(const Graph&);
 };
 
 #endif

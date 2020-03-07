@@ -3,8 +3,8 @@
 #include <time.h>
 
 #include "exceptions.h"
-#include "Includes/Kruskal.h"
-#include "Includes/Graph.h"
+#include "Kruskal.h"
+#include "Graph.h"
 
 #define RANDOM 15
 
@@ -20,17 +20,19 @@ void main()
 	{
 		cout << endl <<"CLASS EXAMPLE" << endl;
 		
-		vector<vector<float> > weights = { {-1},
-										 {8, -1},
-										 {-1, 10, -1},
-										 {-1, 1, 5, -1},
-										 {3, 0, 2, 4, -1},
-										 {2, 2, 9, -1, -1, -1} };
+		float weights[36] = { -1, 8, -1, -1, 3, 2,
+							  8, -1, 10, 1, 0, 2,
+							 -1, 10, -1, 5, 2, 9,
+							 -1, 1, 5, -1, 4, -1,
+							  3, 0, 2, 4, -1, -1,
+							  2, 2, 9, -1, -1, -1 };
 
-		Graph graph(weights);
+		Graph graph(weights, 6);
 		cout << graph;
-		Graph newGraph = Kruskal::Algorithm(graph);
-		cout << newGraph;
+		
+		Edge* newGraph = Kruskal::Algorithm(graph);
+		for (int i = 0; i < (graph.GetCountVertices() - 1); i++)
+			cout << newGraph[i] << endl;
 	}
 	catch (Exception ex)
 	{
@@ -42,23 +44,13 @@ void main()
 		cout << endl << "RANDOM GRAPH" << endl;
 
 		int size = 5;
-
-		vector<vector<float> > weights(size);
-
-		for (int i = 0; i < size; i++)
-		{
-			weights[i].resize(i + 1);
-
-			for (int j = 0; j < i; j++)
-				weights[i][j] = rand() % RANDOM;
-
-			weights[i][i] = -1;
-		}
-
-		Graph graph(weights);
+		Graph graph(size);
+		graph.Random();
 		cout << graph;
-		Graph newGraph = Kruskal::Algorithm(graph);
-		cout << newGraph;
+		
+		Edge* newGraph = Kruskal::Algorithm(graph);
+		for (int i = 0; i < (graph.GetCountVertices() - 1); i++)
+			cout << newGraph[i] << endl;
 	}
 	catch (Exception ex)
 	{

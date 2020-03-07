@@ -3,10 +3,12 @@
 
 #include "Graph.h"
 
+#include <vector>
+
 class Dijkstra
 {
 public:
-	static float** Algorithm(Graph, int);
+	static float* Algorithm(Graph, int, vector<vector<int> >&);
 };
 
 #endif

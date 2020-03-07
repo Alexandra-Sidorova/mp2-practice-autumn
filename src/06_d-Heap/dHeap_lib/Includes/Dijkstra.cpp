@@ -9,7 +9,7 @@
 
 #define D 3
 
-float** Dijkstra::Algorithm(Graph _graph, int _start)
+float* Dijkstra::Algorithm(Graph _graph, int _start, vector<vector<int> >& _paths)
 {
 	if (_start < 0 || _start >= _graph.GetCountVertices())
 		throw Exception("Incorrect start vertex!");
@@ -54,14 +54,26 @@ float** Dijkstra::Algorithm(Graph _graph, int _start)
 		markQueue.Heapify();
 	}
 
-	float** minDist = new float*[_graph.GetCountVertices()];
+	_paths.resize(_graph.GetCountVertices());
+	_paths[_start].resize(1);
+	_paths[_start][0] = _start;
 
 	for (int i = 0; i < _graph.GetCountVertices(); i++)
 	{
-		minDist[i] = new float[2];
-		minDist[i][0] = dist[i];
-		minDist[i][1] = vertices[i];
+		int v = vertices[i];
+		int count = 1;
+		_paths[i].resize(_graph.GetCountVertices() - 1);
+
+		while (v != _start)
+		{
+			_paths[i][count - 1] = v;
+			v = vertices[v];
+			count++;
+		}
+		
+		_paths[i].resize(count);
+		reverse(_paths[i].begin(), _paths[i].end());
 	}
 
-	return minDist;
+	return dist;
 };

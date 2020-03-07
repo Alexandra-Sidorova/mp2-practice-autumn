@@ -126,16 +126,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Includes\Dijkstra.h" />
-    <ClInclude Include="Includes\Edge.h" />
-    <ClInclude Include="Includes\Graph.h" />
-    <ClInclude Include="Includes\Mark.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Includes\Dijkstra.cpp" />
-    <ClCompile Include="Includes\Edge.cpp" />
-    <ClCompile Include="Includes\Graph.cpp" />
-    <ClCompile Include="Includes\Mark.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

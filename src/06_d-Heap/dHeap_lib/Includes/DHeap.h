@@ -16,14 +16,11 @@ private:
 	T* elems;
 
 public:
-	DHeap(int, int);
 	DHeap(int, int, int, T*);
 	DHeap(const DHeap&);
 	~DHeap();
 
 	int GetCurrentSize() const;
-	T* GetElems() const;
-	void SetCurrentSize(const int);
 
 	void Push(const T);
 	int MinChild(int) const;
@@ -35,18 +32,6 @@ public:
 	void Heapify();
 };
 //-----------------------------------------------------------------------------------
-
-template<typename T>
-DHeap<T>::DHeap(int _maxSize, int _d)
-{
-	if (_maxSize <= 0 || _d <= 0)
-		throw Exception("Incorrect data!");
-
-	maxSize = _maxSize;
-	currentSize = 0;
-	d = _d;
-	elems = new T[maxSize];
-};
 
 template<typename T>
 DHeap<T>::DHeap(int _maxSize, int _currentSize, int _d, T* _elems)
@@ -81,21 +66,6 @@ template<typename T>
 int DHeap<T>::GetCurrentSize() const
 {
 	return currentSize;
-};
-
-template<typename T>
-T* DHeap<T>::GetElems() const
-{
-	return elems;
-};
-
-template<typename T>
-void DHeap<T>::SetCurrentSize(const int _size)
-{
-	if (_size < 0 || _size > maxSize)
-		throw Exception("Incorrect data!");
-
-	currentSize = _size;
 };
 
 template<typename T>

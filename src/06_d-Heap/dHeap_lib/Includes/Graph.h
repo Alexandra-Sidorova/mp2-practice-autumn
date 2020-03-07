@@ -11,21 +11,25 @@ class Graph
 {
 private:
 	int countVertices;
-	vector<vector<float> > weights;
+	float* weights;
 
 public:
 	Graph(int);
-	Graph(vector<vector<float> >);
-	Graph(DHeap<Edge>, int);
+	Graph(float*, int);
 	Graph(const Graph&);
 	~Graph();
 
 	int GetCountVertices() const;
 
-	DHeap<Edge> CreateEdges();
 	void Random();
+	int* Neighborhood(int);
+	int DegreeVert(int) const;
+	float Weight(int, int) const;
 
-	friend istream& operator>>(istream&, Graph&);
+	Edge* ListOfEdges() const;
+	int CountOfEdges() const;
+	float* AdjacencyMatrix() const;
+
 	friend ostream& operator<<(ostream&, const Graph&);
 };
 

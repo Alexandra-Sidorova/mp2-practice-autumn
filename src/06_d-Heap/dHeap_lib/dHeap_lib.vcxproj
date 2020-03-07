@@ -19,11 +19,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Includes\Dijkstra.cpp" />
+    <ClCompile Include="Includes\Edge.cpp" />
+    <ClCompile Include="Includes\Graph.cpp" />
+    <ClCompile Include="Includes\Kruskal.cpp" />
+    <ClCompile Include="Includes\Mark.cpp" />
     <ClCompile Include="Includes\SeparatedSet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Includes\DHeap.h" />
+    <ClInclude Include="Includes\Dijkstra.h" />
+    <ClInclude Include="Includes\Edge.h" />
     <ClInclude Include="Includes\exceptions.h" />
+    <ClInclude Include="Includes\Graph.h" />
+    <ClInclude Include="Includes\Heapsort.h" />
+    <ClInclude Include="Includes\Kruskal.h" />
+    <ClInclude Include="Includes\Mark.h" />
     <ClInclude Include="Includes\SeparatedSet.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

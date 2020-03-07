@@ -129,14 +129,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Includes\Edge.h" />
-    <ClInclude Include="Includes\Graph.h" />
-    <ClInclude Include="Includes\Kruskal.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Includes\Edge.cpp" />
-    <ClCompile Include="Includes\Graph.cpp" />
-    <ClCompile Include="Includes\Kruskal.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

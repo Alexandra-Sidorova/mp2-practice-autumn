@@ -13,7 +13,7 @@ public:
 	SeparatedSet(const SeparatedSet&);
 	~SeparatedSet();
 
-	void CreateSingleton();
+	void CreateSingleton(int);
 	void Union(int, int);
 	int Definition(int) const;
 };

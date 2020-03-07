@@ -38,10 +38,9 @@ SeparatedSet::~SeparatedSet()
 };
 //----------------------------------------------------------
 
-void SeparatedSet::CreateSingleton()
+void SeparatedSet::CreateSingleton(int i)
 {
-	for (int i = 0; i < size; i++)
-		arr[i] = i;
+	arr[i] = i;
 };
 
 void SeparatedSet::Union(int i, int j)
