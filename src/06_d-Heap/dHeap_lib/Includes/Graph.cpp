@@ -76,29 +76,6 @@ void Graph::Random()
 	}
 };
 
-int* Graph::Neighborhood(int _v)
-{
-	int* vertices = new int[countVertices - 1];
-	int count = 0;
-
-	for (int i = 0; i < countVertices; i++)
-		if (weights[_v * countVertices + i] != -1)
-			vertices[count++] = i;
-
-	return vertices;
-};
-
-int Graph::DegreeVert(int _v) const
-{
-	int count = 0;
-
-	for (int i = 0; i < countVertices; i++)
-		if (weights[_v * countVertices + i] != -1)
-			count++;
-
-	return count;
-};
-
 float Graph::Weight(int _i, int _j) const
 {
 	return weights[_i * countVertices + _j];

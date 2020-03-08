@@ -22,10 +22,7 @@ public:
 	int GetCountVertices() const;
 
 	void Random();
-	int* Neighborhood(int);
-	int DegreeVert(int) const;
 	float Weight(int, int) const;
-
 	Edge* ListOfEdges() const;
 	int CountOfEdges() const;
 	float* AdjacencyMatrix() const;

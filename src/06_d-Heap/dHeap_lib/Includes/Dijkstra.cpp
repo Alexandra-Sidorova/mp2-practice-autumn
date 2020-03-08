@@ -36,18 +36,16 @@ float* Dijkstra::Algorithm(Graph _graph, int _start, vector<vector<int> >& _path
 		Mark mark = markQueue.WatchMin();		
 		markQueue.PopMin();
 
-		int* neighborhood = _graph.Neighborhood(mark.vert);
+		float* adjMatrix = _graph.AdjacencyMatrix();
 
-		if (neighborhood == nullptr)
-			continue;
-
-		for (int i = 0; i < _graph.DegreeVert(mark.vert); i++)
+		for (int i = 0; i < _graph.GetCountVertices(); i++)
 		{
-			if (dist[mark.vert] + _graph.Weight(mark.vert, neighborhood[i]) < dist[neighborhood[i]])
+			if ((adjMatrix[i * _graph.GetCountVertices() + mark.vert] == 1) && 
+				(dist[mark.vert] + _graph.Weight(mark.vert, i) < dist[i]))
 			{
-				dist[neighborhood[i]] = dist[mark.vert] + _graph.Weight(mark.vert, neighborhood[i]);
-				marks[neighborhood[i]].dist = dist[neighborhood[i]];
-				vertices[neighborhood[i]] = mark.vert;
+				dist[i] = dist[mark.vert] + _graph.Weight(mark.vert, i);
+				marks[i].dist = dist[i];
+				vertices[i] = mark.vert;
 			}
 		}
 
@@ -55,8 +53,6 @@ float* Dijkstra::Algorithm(Graph _graph, int _start, vector<vector<int> >& _path
 	}
 
 	_paths.resize(_graph.GetCountVertices());
-	_paths[_start].resize(1);
-	_paths[_start][0] = _start;
 
 	for (int i = 0; i < _graph.GetCountVertices(); i++)
 	{
@@ -71,6 +67,7 @@ float* Dijkstra::Algorithm(Graph _graph, int _start, vector<vector<int> >& _path
 			count++;
 		}
 		
+		_paths[i][count - 1] = _start;
 		_paths[i].resize(count);
 		reverse(_paths[i].begin(), _paths[i].end());
 	}
