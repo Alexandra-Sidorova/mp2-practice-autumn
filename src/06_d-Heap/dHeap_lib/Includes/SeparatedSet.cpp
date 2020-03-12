@@ -34,7 +34,7 @@ SeparatedSet::SeparatedSet(const SeparatedSet& _copy)
 SeparatedSet::~SeparatedSet()
 {
 	size = 0;
-	delete arr;
+	delete[] arr;
 };
 //----------------------------------------------------------
 
@@ -50,7 +50,7 @@ void SeparatedSet::Union(int i, int j)
 
 	for (int k = 0; k < size; k++)
 		if (arr[k] == i)
-			arr[k] = i;
+			arr[k] = j;
 };
 
 int SeparatedSet::Definition(int i) const
