@@ -17,11 +17,11 @@ void main()
 	try
 	{
 		cout << endl << "RANDOM ARRAY" << endl;
-		int *elements = new int[10];
+		int *elements = new int[10]; // float or double
 
 		for (int i = 0; i < 10; i++)
 		{
-			elements[i] = rand() % RANDOM - RANDOM / 2;
+			elements[i] = rand() % RANDOM - RANDOM / 2; // [a, b]
 			cout << elements[i] << " ";
 		}
 

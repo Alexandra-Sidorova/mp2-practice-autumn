@@ -46,7 +46,7 @@ DHeap<T>::DHeap(int _maxSize, int _currentSize, int _d, T* _elems)
 };
 
 template<typename T>
-DHeap<T>::DHeap(const DHeap& _copy)
+DHeap<T>::DHeap(const DHeap<T>& _copy)
 {
 	maxSize = _copy.maxSize;
 	currentSize = _copy.currentSize;

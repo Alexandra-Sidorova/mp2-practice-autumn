@@ -30,20 +30,19 @@ float* Dijkstra::Algorithm(Graph _graph, int _start, vector<vector<int> >& _path
 	marks[_start].dist = 0;
 
 	DHeap<Mark> markQueue(_graph.GetCountVertices(), _graph.GetCountVertices(), D, marks);
+	float* adjMatrix = _graph.AdjacencyMatrix();
 
 	while (markQueue.GetCurrentSize() != 0)
 	{
 		Mark mark = markQueue.WatchMin();		
 		markQueue.PopMin();
 
-		float* adjMatrix = _graph.AdjacencyMatrix();
-
 		for (int i = 0; i < _graph.GetCountVertices(); i++)
 		{
 			if ((adjMatrix[i * _graph.GetCountVertices() + mark.vert] == 1) && 
-				(dist[mark.vert] + _graph.Weight(mark.vert, i) < dist[i]))
+				(dist[mark.vert] + adjMatrix[mark.vert * _graph.GetCountVertices() + i] < dist[i]))
 			{
-				dist[i] = dist[mark.vert] + _graph.Weight(mark.vert, i);
+				dist[i] = dist[mark.vert] + adjMatrix[mark.vert * _graph.GetCountVertices() + i];
 				marks[i].dist = dist[i];
 				vertices[i] = mark.vert;
 			}

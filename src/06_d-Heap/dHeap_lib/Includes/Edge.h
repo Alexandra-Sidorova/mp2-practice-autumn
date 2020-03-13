@@ -8,13 +8,13 @@ using namespace std;
 class Edge
 {
 private:
-	int weight;
+	float weight;
 	int start;
 	int end;
 
 public:
 	Edge();
-	Edge(int, int, int);
+	Edge(float, int, int);
 	~Edge();
 
 	int GetWeight() const;

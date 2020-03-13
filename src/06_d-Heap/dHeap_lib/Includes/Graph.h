@@ -22,9 +22,7 @@ public:
 	int GetCountVertices() const;
 
 	void Random();
-	float Weight(int, int) const;
-	Edge* ListOfEdges() const;
-	int CountOfEdges() const;
+	void ListOfEdges(Edge*, int&) const;
 	float* AdjacencyMatrix() const;
 
 	friend ostream& operator<<(ostream&, const Graph&);

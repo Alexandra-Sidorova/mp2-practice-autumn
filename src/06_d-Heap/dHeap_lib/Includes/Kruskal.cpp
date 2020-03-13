@@ -17,7 +17,11 @@ Edge* Kruskal::Algorithm(const Graph& _graph)
 	for(int i = 0; i < _graph.GetCountVertices(); i++)
 		vertices.CreateSingleton(i);
 
-	DHeap<Edge> edgesHeap (_graph.CountOfEdges(), _graph.CountOfEdges(), D, _graph.ListOfEdges());
+	Edge* listOfEdges;
+	int countOfEdges = 0;
+
+	_graph.ListOfEdges(listOfEdges, countOfEdges);
+	DHeap<Edge> edgesHeap (countOfEdges, countOfEdges, D, listOfEdges);
 	edgesHeap.Heapify();
 
 	Edge* frameGraph = new Edge[_graph.GetCountVertices() - 1];

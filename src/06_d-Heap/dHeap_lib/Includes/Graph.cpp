@@ -76,39 +76,22 @@ void Graph::Random()
 	}
 };
 
-float Graph::Weight(int _i, int _j) const
+void Graph::ListOfEdges(Edge* _edges, int& countEdges) const
 {
-	return weights[_i * countVertices + _j];
-};
-
-Edge* Graph::ListOfEdges() const
-{
-	Edge* edges = new Edge[countVertices * (countVertices - 1) / 2];
-	int countEdges = 0;
+	if (_edges == nullptr)
+		_edges = new Edge[countVertices * (countVertices - 1) / 2];
+	
+	countEdges = 0;
 
 	for (int i = 0; i < countVertices; i++)
 		for (int j = 0; j < i; j++)
 		{
-			if (Weight(i, j) >= 0)
+			if (weights[i * countVertices + j] >= 0)
 			{
-				Edge edge(Weight(i, j), i, j);
-				edges[countEdges++] = edge;
+				Edge edge(weights[i * countVertices + j], i, j);
+				_edges[countEdges++] = edge;
 			}
 		}
-
-	return edges;
-};
-
-int Graph::CountOfEdges() const
-{
-	int countEdges = 0;
-
-	for (int i = 0; i < countVertices; i++)
-		for (int j = 0; j < i; j++)
-			if (Weight(i, j) >= 0)
-				countEdges++;
-
-	return countEdges;
 };
 
 float* Graph::AdjacencyMatrix() const
@@ -118,10 +101,10 @@ float* Graph::AdjacencyMatrix() const
 	for (int i = 0; i < countVertices; i++)
 		for (int j = 0; j <= i; j++)
 		{
-			if (Weight(i, j) >= 0)
+			if (weights[i * countVertices + j] >= 0)
 			{
-				matrix[i * countVertices + j] = 1;
-				matrix[j * countVertices + i] = 1;
+				matrix[i * countVertices + j] = weights[i * countVertices + j];
+				matrix[j * countVertices + i] = weights[j * countVertices + i];
 			}
 			else
 			{
