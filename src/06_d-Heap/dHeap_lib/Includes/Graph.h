@@ -14,6 +14,7 @@ private:
 	float* weights;
 
 public:
+	Graph();
 	Graph(int);
 	Graph(float*, int);
 	Graph(const Graph&);

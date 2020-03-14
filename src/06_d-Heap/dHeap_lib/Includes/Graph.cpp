@@ -1,6 +1,10 @@
 #include "Graph.h"
 
-using namespace std;
+Graph::Graph()
+{
+	countVertices = 0;
+	weights = nullptr;
+};
 
 Graph::Graph(int _size)
 {
@@ -92,17 +96,14 @@ void Graph::GenerateConnectGraph()
 
 void Graph::ListOfEdges(Edge* _edges, int& countEdges) const
 {
-	if (_edges == nullptr)
-		_edges = new Edge[countVertices * (countVertices - 1) / 2];
-	
 	countEdges = 0;
 
 	for (int i = 0; i < countVertices; i++)
 		for (int j = 0; j < i; j++)
 		{
-			if (weights[i * countVertices + j] >= 0)
+			if (this->weights[i * countVertices + j] >= 0)
 			{
-				Edge edge(weights[i * countVertices + j], i, j);
+				Edge edge(this->weights[i * countVertices + j], i, j);
 				_edges[countEdges++] = edge;
 			}
 		}
@@ -130,6 +131,7 @@ float* Graph::AdjacencyMatrix() const
 	return matrix;
 };
 
+using namespace std;
 istream& operator>>(istream& _in, Graph& _graph)
 {
 	int countOfEdges = 0;
@@ -178,7 +180,7 @@ istream& operator>>(istream& _in, Graph& _graph)
 		_graph.weights[v2 * _graph.countVertices + v1] = _graph.weights[v1 * _graph.countVertices + v2];
 	}
 
-	cout << "Graph is complete." << endl;
+	cout << endl << "Graph is complete." << endl;
 
 	return _in;
 };

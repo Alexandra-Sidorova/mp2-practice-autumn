@@ -36,8 +36,8 @@ public:
 template<typename T>
 DHeap<T>::DHeap(int _maxSize, int _currentSize, int _d, T* _elems)
 {
-	if (_maxSize <= 0 || _currentSize < 0 || _d <= 0 || _elems == nullptr || _currentSize > _maxSize)
-		throw Exception("Incorrect data!");
+	if (_maxSize < 0 || _currentSize < 0 || _d <= 0 || _elems == nullptr || _currentSize > _maxSize)
+		throw Exception("Incorrect data for create DHeap!");
 
 	maxSize = _maxSize;
 	currentSize = _currentSize;

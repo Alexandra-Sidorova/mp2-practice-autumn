@@ -30,9 +30,25 @@ void main()
 		Graph graph(weights, 6);
 		cout << graph;
 		
-		Edge* newGraph = Kruskal::Algorithm(graph);
-		for (int i = 0; i < (graph.GetCountVertices() - 1); i++)
-			cout << newGraph[i] << endl;
+		vector<vector<Edge> > newGraph;
+		cout << "Kruskal's Algorithm is loading..." << endl;
+		Kruskal::Algorithm(graph, newGraph);
+
+		if (newGraph.size() == 0)
+		{
+			cout << "Graph don't have edges." << endl;
+			return;
+		}
+
+		for (int i = 0; i < newGraph.size(); i++)
+		{
+			cout << endl << "Connection " << i << ": " << endl;
+
+			for (int j = 0; j < newGraph[i].size(); j++)
+				cout << newGraph[i][j] << endl;
+		}
+
+		newGraph.clear();
 	}
 	catch (Exception ex)
 	{
@@ -45,12 +61,61 @@ void main()
 
 		int size = 5;
 		Graph graph(size);
-		graph.Random();
+		graph.GenerateCommonGraph();
 		cout << graph;
 		
-		Edge* newGraph = Kruskal::Algorithm(graph);
-		for (int i = 0; i < (graph.GetCountVertices() - 1); i++)
-			cout << newGraph[i] << endl;
+		vector<vector<Edge> > newGraph;
+		cout << "Kruskal's Algorithm is loading..." << endl;
+		Kruskal::Algorithm(graph, newGraph);
+
+		if (newGraph.size() == 0)
+		{
+			cout << "Graph don't have edges." << endl;
+			return;
+		}
+
+		for (int i = 0; i < newGraph.size(); i++)
+		{
+			cout << endl << "Connection " << i << ": " << endl;
+
+			for (int j = 0; j < newGraph[i].size(); j++)
+				cout << newGraph[i][j] << endl;
+		}
+
+		newGraph.clear();
+	}
+	catch (Exception ex)
+	{
+		cout << "[ERROR] " << ex.what() << endl << endl;
+	}
+
+	try
+	{
+		cout << endl << "INPUT GRAPH" << endl;
+
+		Graph graph;
+		cin >> graph;
+		cout << graph;
+
+		vector<vector<Edge> > newGraph;
+		cout << "Kruskal's Algorithm is loading..." << endl;
+		Kruskal::Algorithm(graph, newGraph);
+
+		if (newGraph.size() == 0)
+		{
+			cout << "Graph don't have edges." << endl;
+			return;
+		}
+
+		for (int i = 0; i < newGraph.size(); i++)
+		{
+			cout << endl << "Connection " << i << ": " << endl;
+
+			for (int j = 0; j < newGraph[i].size(); j++)
+				cout << newGraph[i][j] << endl;
+		}
+
+		newGraph.clear();
 	}
 	catch (Exception ex)
 	{
