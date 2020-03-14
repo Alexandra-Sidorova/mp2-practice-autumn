@@ -62,13 +62,27 @@ int Graph::GetCountVertices() const
 	return countVertices;
 };
 
-void Graph::Random()
+void Graph::GenerateCommonGraph()
 {
 	for (int i = 0; i < countVertices; i++)
 	{
 		for (int j = 0; j < i; j++)
 		{
-			weights[i * countVertices + j] = (int)(rand() % 20) - 1;
+			weights[i * countVertices + j] = (int)(rand() % 12) - 1;
+			weights[j * countVertices + i] = weights[i * countVertices + j];
+		}
+
+		weights[i * countVertices + i] = -1;
+	}
+};
+
+void Graph::GenerateConnectGraph()
+{
+	for (int i = 0; i < countVertices; i++)
+	{
+		for (int j = 0; j < i; j++)
+		{
+			weights[i * countVertices + j] = (int)(rand() % 12);
 			weights[j * countVertices + i] = weights[i * countVertices + j];
 		}
 
@@ -114,6 +128,59 @@ float* Graph::AdjacencyMatrix() const
 		}
 
 	return matrix;
+};
+
+istream& operator>>(istream& _in, Graph& _graph)
+{
+	int countOfEdges = 0;
+
+	cout << "Enter the count of vertices: ";
+	_in >> _graph.countVertices;
+	if (_graph.countVertices <= 0)
+		throw Exception("Count of vertices must be positive!");
+
+	_graph.weights = new float[_graph.countVertices * _graph.countVertices];
+
+	for (int i = 0; i < _graph.countVertices; i++)
+		for (int j = 0; j < _graph.countVertices; j++)
+			_graph.weights[i * _graph.countVertices + j] = -1;
+
+	cout << "Enter the count of edges: ";
+	_in >> countOfEdges;
+
+	if ((countOfEdges > (_graph.countVertices * (_graph.countVertices - 1) / 2)) || (countOfEdges < 0))
+		throw Exception("Count of Edges must be in [0, (countVertices * (countVertices - 1) / 2)]");
+
+	for (int i = 0; i < countOfEdges; i++)
+	{
+		int v1, v2;
+
+		cout << endl << "Enter the first vertex: ";
+		_in >> v1;
+		if ((v1 < 0) || (v1 >= _graph.countVertices))
+			throw Exception("Not correct name ov vertex!");
+
+		cout << "Enter the secound vertex: ";
+		_in >> v2;
+		if ((v2 < 0) || (v2 >= _graph.countVertices))
+			throw Exception("Not correct name of vertex!");
+
+		if (v1 == v2)
+			throw Exception("First vertex is the secound!");
+
+		if (_graph.weights[v1 * _graph.countVertices + v2] > 0)
+			throw Exception("The edge between these vertices exists!");
+
+		cout << "Enter the weight for edge: ";
+		_in >> _graph.weights[v1 * _graph.countVertices + v2];
+		if (_graph.weights[v1 * _graph.countVertices + v2] < 0)
+			throw Exception("The edge between these vertices must be not negative!");
+		_graph.weights[v2 * _graph.countVertices + v1] = _graph.weights[v1 * _graph.countVertices + v2];
+	}
+
+	cout << "Graph is complete." << endl;
+
+	return _in;
 };
 
 ostream& operator<<(ostream& _out, const Graph& _graph)

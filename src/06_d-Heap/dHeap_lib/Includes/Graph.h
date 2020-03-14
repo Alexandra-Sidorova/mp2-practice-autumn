@@ -21,10 +21,13 @@ public:
 
 	int GetCountVertices() const;
 
-	void Random();
+	void GenerateCommonGraph();
+	void GenerateConnectGraph();
+	void SpecialRandom();
 	void ListOfEdges(Edge*, int&) const;
 	float* AdjacencyMatrix() const;
 
+	friend istream& operator>>(istream&, Graph&);
 	friend ostream& operator<<(ostream&, const Graph&);
 };
 
