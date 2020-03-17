@@ -74,4 +74,7 @@ void Dijkstra::Algorithm(const Graph& _graph, const int _start, vector<vector<in
 		_paths[i].resize(count);
 		reverse(_paths[i].begin(), _paths[i].end());
 	}
+
+	delete[] vertices;
+	delete[] marks;
 };
