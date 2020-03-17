@@ -30,11 +30,13 @@ void main()
 							   -1, -1, -1, -1, -1, 13, -1, 5,
 							   -1, -1, -1, -1, 1, 24, 5, -1 };
 
-		Graph graph(weights, size);
+		Graph graph(weights, 8);
 		cout << graph;
 		cout << "Start vertex = 0" << endl;
 		vector<vector<int> > paths;
-		float* result = Dijkstra::Algorithm(graph, 0, paths);
+		float* result = new float[size];
+		cout << "Dijkstra's Algorithm is loading..." << endl;
+		Dijkstra::Algorithm(graph, 0, paths, result);
 		
 		for (int i = 0; i < size; i++)
 		{
@@ -50,7 +52,7 @@ void main()
 		cout << "[ERROR] " << ex.what() << endl << endl;
 	}
 
-	try
+	/*try
 	{
 		cout << endl << endl << "RANDOM GRAPH" << endl;
 
@@ -58,7 +60,7 @@ void main()
 		int startV = rand() % size;
 
 		Graph graph(size);
-		graph.Random();
+		graph.GenerateConnectGraph();
 		cout << graph;
 		cout << "Start vertex = " << startV << endl;
 		vector<vector<int> > paths;
@@ -86,7 +88,7 @@ void main()
 		int startV = -5;
 
 		Graph graph(size);
-		graph.Random();
+		graph.GenerateConnectGraph();
 		cout << graph;
 		cout << "Start vertex = " << startV << endl;
 		vector<vector<int> > paths;
@@ -104,5 +106,5 @@ void main()
 	catch (Exception ex)
 	{
 		cout << "[ERROR] " << ex.what() << endl << endl;
-	}
+	}*/
 }

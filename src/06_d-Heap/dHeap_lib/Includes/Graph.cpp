@@ -111,24 +111,7 @@ void Graph::ListOfEdges(Edge* _edges, int& countEdges) const
 
 float* Graph::AdjacencyMatrix() const
 {
-	float* matrix = new float[countVertices * countVertices];
-
-	for (int i = 0; i < countVertices; i++)
-		for (int j = 0; j <= i; j++)
-		{
-			if (weights[i * countVertices + j] >= 0)
-			{
-				matrix[i * countVertices + j] = weights[i * countVertices + j];
-				matrix[j * countVertices + i] = weights[j * countVertices + i];
-			}
-			else
-			{
-				matrix[i * countVertices + j] = 0;
-				matrix[j * countVertices + i] = 0;
-			}
-		}
-
-	return matrix;
+	return weights;
 };
 
 using namespace std;

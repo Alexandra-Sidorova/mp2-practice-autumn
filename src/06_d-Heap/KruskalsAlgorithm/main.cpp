@@ -18,7 +18,7 @@ void main()
 
 	try
 	{
-		cout << endl <<"CLASS EXAMPLE" << endl;
+		cout << endl << "CLASS EXAMPLE" << endl;
 		
 		float weights[36] = { -1, 8, -1, -1, 3, 2,
 							  8, -1, 10, 1, 0, 2,

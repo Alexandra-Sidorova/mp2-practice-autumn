@@ -9,24 +9,21 @@
 
 #define D 3
 
-float* Dijkstra::Algorithm(Graph _graph, int _start, vector<vector<int> >& _paths)
+void Dijkstra::Algorithm(const Graph& _graph, const int _start, vector<vector<int> >& _paths, float* _result)
 {
 	if (_start < 0 || _start >= _graph.GetCountVertices())
 		throw Exception("Incorrect start vertex!");
 
-	float* dist = new float[_graph.GetCountVertices()];
 	int* vertices = new int[_graph.GetCountVertices()];
 	Mark* marks = new Mark[_graph.GetCountVertices()];
 
 	for (int i = 0; i < _graph.GetCountVertices(); i++)
 	{
-		dist[i] = std::numeric_limits<float>::infinity();
 		marks[i].dist = std::numeric_limits<float>::infinity();
 		vertices[i] = _start;
 		marks[i].vert = i;
 	}
 
-	dist[_start] = 0;
 	marks[_start].dist = 0;
 
 	DHeap<Mark> markQueue(_graph.GetCountVertices(), _graph.GetCountVertices(), D, marks);
@@ -39,17 +36,24 @@ float* Dijkstra::Algorithm(Graph _graph, int _start, vector<vector<int> >& _path
 
 		for (int i = 0; i < _graph.GetCountVertices(); i++)
 		{
-			if ((adjMatrix[i * _graph.GetCountVertices() + mark.vert] == 1) && 
-				(dist[mark.vert] + adjMatrix[mark.vert * _graph.GetCountVertices() + i] < dist[i]))
+			int idx = marks[i].vert * _graph.GetCountVertices() + mark.vert;
+			
+			if ((adjMatrix[idx] >= 0) && (mark.dist + adjMatrix[idx] < marks[i].dist))
 			{
-				dist[i] = dist[mark.vert] + adjMatrix[mark.vert * _graph.GetCountVertices() + i];
-				marks[i].dist = dist[i];
-				vertices[i] = mark.vert;
+				marks[i].dist = mark.dist + adjMatrix[idx];
+				vertices[marks[i].vert] = mark.vert;
 			}
 		}
 
 		markQueue.Heapify();
 	}
+
+	if (_result != nullptr)
+		delete[] _result;
+	_result = new float[_graph.GetCountVertices()];
+
+	for (int i = 0; i < _graph.GetCountVertices(); i++)
+		_result[marks[i].vert] = marks[i].dist;
 
 	_paths.resize(_graph.GetCountVertices());
 
@@ -70,6 +74,4 @@ float* Dijkstra::Algorithm(Graph _graph, int _start, vector<vector<int> >& _path
 		_paths[i].resize(count);
 		reverse(_paths[i].begin(), _paths[i].end());
 	}
-
-	return dist;
 };
