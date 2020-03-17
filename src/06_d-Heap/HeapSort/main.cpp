@@ -1,10 +1,9 @@
 #include "Heapsort.h"
 #include "exceptions.h"
 
+#include <cmath>
 #include <iostream>
 #include <time.h>
-
-#define RANDOM 30
 
 using namespace std;
 
@@ -16,18 +15,30 @@ void main()
 
 	try
 	{
-		cout << endl << "RANDOM ARRAY" << endl;
-		int *elements = new int[10]; // float or double
+		cout << endl << "RANDOM ARRAY IN [A, B]" << endl;
+		float a, b;
+		int size = 0;
+		
+		cout << "Enter the array size:";
+		cin >> size;
+		if (size <= 0)
+			throw Exception("Size must be positive!");
 
+		cout << "Enter the A: ";
+		cin >> a;
+		cout << "Enter the B: ";
+		cin >> b;
+
+		float* elements = new float[size];
 		for (int i = 0; i < 10; i++)
 		{
-			elements[i] = rand() % RANDOM - RANDOM / 2; // [a, b]
+			elements[i] = a + rand() % (int)(b - a + 1);
 			cout << elements[i] << " ";
 		}
 
 		cout << endl << "Sorting..." << endl;
 
-		HeapSort<int>::Sort(elements, 10);
+		HeapSort<float>::Sort(elements, 10);
 		for (int i = 0; i < 10; i++)
 			cout << elements[i] << " ";
 	}
@@ -55,12 +66,12 @@ void main()
 
 	try
 	{
-		cout << endl << "INCORRECT SIZE -100" << endl;
+		cout << endl << "INCORRECT SIZE -100 OF RANDOM ARRAY IN [-20; 20] " << endl;
 		int* elements = new int[10];
 
 		for (int i = 0; i < 10; i++)
 		{
-			elements[i] = rand() % RANDOM - RANDOM / 2;
+			elements[i] = rand() % 41 - 20;
 			cout << elements[i] << " ";
 		}
 		cout << endl << "Size = -100" << endl;
