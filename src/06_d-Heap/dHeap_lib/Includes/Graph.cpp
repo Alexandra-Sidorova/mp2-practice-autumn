@@ -1,4 +1,5 @@
 #include "Graph.h"
+#include "SeparatedSet.h"
 
 Graph::Graph()
 {
@@ -112,6 +113,39 @@ void Graph::ListOfEdges(Edge* _edges, int& countEdges) const
 float* Graph::AdjacencyMatrix() const
 {
 	return weights;
+};
+
+bool Graph::IsConnected() const
+{
+	SeparatedSet vertices(countVertices);
+	for (int i = 0; i < countVertices; i++)
+		vertices.CreateSingleton(i);
+
+	Edge* listOfEdges = new Edge[countVertices * (countVertices - 1) / 2];
+	int countOfEdges = 0;
+
+	this->ListOfEdges(listOfEdges, countOfEdges);
+
+	if (countOfEdges == 0)
+		return false;
+
+	for (int i = 0; i < countOfEdges; i++)
+	{
+		Edge edge = listOfEdges[i];
+		int setStart = vertices.Definition(edge.GetStart());
+		int setEnd = vertices.Definition(edge.GetEnd());
+
+		if (setStart != setEnd)
+			vertices.Union(setStart, setEnd);
+	}
+
+	int v = vertices.Definition(0);
+
+	for (int i = 0; i < countVertices; i++)
+		if (v != vertices.Definition(i))
+			return false;
+
+	return true;
 };
 
 using namespace std;

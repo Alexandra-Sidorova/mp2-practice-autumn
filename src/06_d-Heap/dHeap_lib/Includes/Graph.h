@@ -27,6 +27,7 @@ public:
 	void SpecialRandom();
 	void ListOfEdges(Edge*, int&) const;
 	float* AdjacencyMatrix() const;
+	bool IsConnected() const;
 
 	friend istream& operator>>(istream&, Graph&);
 	friend ostream& operator<<(ostream&, const Graph&);

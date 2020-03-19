@@ -14,6 +14,9 @@ void Dijkstra::Algorithm(const Graph& _graph, const int _start, vector<vector<in
 	if (_start < 0 || _start >= _graph.GetCountVertices())
 		throw Exception("Incorrect start vertex!");
 
+	if (!_graph.IsConnected())
+		throw Exception("Graph must be connect connected!");
+
 	int* vertices = new int[_graph.GetCountVertices()];
 	Mark* marks = new Mark[_graph.GetCountVertices()];
 
@@ -27,6 +30,8 @@ void Dijkstra::Algorithm(const Graph& _graph, const int _start, vector<vector<in
 	marks[_start].dist = 0;
 
 	DHeap<Mark> markQueue(_graph.GetCountVertices(), _graph.GetCountVertices(), D, marks);
+	markQueue.Heapify();
+
 	float* adjMatrix = _graph.AdjacencyMatrix();
 
 	while (markQueue.GetCurrentSize() != 0)
@@ -42,15 +47,12 @@ void Dijkstra::Algorithm(const Graph& _graph, const int _start, vector<vector<in
 			{
 				marks[i].dist = mark.dist + adjMatrix[idx];
 				vertices[marks[i].vert] = mark.vert;
+				adjMatrix[idx] = -1;
 			}
 		}
 
 		markQueue.Heapify();
 	}
-
-	if (_result != nullptr)
-		delete[] _result;
-	_result = new float[_graph.GetCountVertices()];
 
 	for (int i = 0; i < _graph.GetCountVertices(); i++)
 		_result[marks[i].vert] = marks[i].dist;
