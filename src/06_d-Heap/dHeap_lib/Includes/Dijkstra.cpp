@@ -48,6 +48,7 @@ void Dijkstra::Algorithm(const Graph& _graph, const int _start, vector<vector<in
 				marks[i].dist = mark.dist + adjMatrix[idx];
 				vertices[marks[i].vert] = mark.vert;
 				adjMatrix[idx] = -1;
+				adjMatrix[mark.vert * _graph.GetCountVertices() + marks[i].vert] = -1;
 			}
 		}
 
